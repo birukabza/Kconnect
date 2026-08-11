@@ -1,33 +1,45 @@
 # KConnect AI
 
-An AI companion that helps foreigners in Rwanda communicate with locals across the English↔Kinyarwanda language barrier — speak in one language, hear it spoken aloud in the other.
+Helps foreigners in Rwanda communicate with locals across the English↔Kinyarwanda language barrier  speak in one language, hear it spoken aloud in the other.
 
-This is the **UI-first build**: a fully interactive Next.js app with mic recording, text input, quick-phrase shortcuts, conversation history, and export — all wired to a mock translation pipeline (`lib/mockConverse.ts`) so the whole experience works without any backend or Google Cloud credentials yet.
+Frontend is a fully interactive Next.js app (mic recording, text input, quick-phrase shortcuts, conversation history, export). It currently runs against a mock translation pipeline (`frontend/lib/mockConverse.ts`), so it works with no backend wired up yet.
 
-## Run it
+## Repo layout
+
+- `frontend/` — the Next.js app (see below)
+- `Backend/` — not built yet; see "Backend integration" below for the contract to implement
+
+## Run the frontend
 
 ```bash
+cd frontend
 npm install
 npm run dev
 ```
 
 Open http://localhost:3000.
 
-## What's real vs. simulated right now
+## What's real vs. simulated
 
-- **Real**: mic permission/recording (`MediaRecorder`), UI state machine, conversation history (persisted to `localStorage`), quick-phrase translations for the phrases in `lib/phrases.ts`, spoken playback via the browser's built-in Web Speech API, copy/download transcript.
-- **Simulated**: for text outside the known phrase list, translation is a placeholder (`[demo translation] ...`); for recorded audio, transcription is a placeholder since no Speech-to-Text is wired up yet.
+- **Real**: mic permission/recording (`MediaRecorder`), UI state machine, conversation history (persisted to `localStorage`), quick-phrase translations for the phrases in `lib/phrases.ts`, spoken playback via the browser's Web Speech API, copy/download transcript.
+- **Simulated**: text outside the known phrase list gets a placeholder translation (`[demo translation] ...`); recorded audio gets a placeholder transcript — no Speech-to-Text is wired up yet.
 
-## Next steps (Phase 2 — not built yet)
+## Backend integration
 
-Wire up the real pipeline by replacing the internals of `lib/mockConverse.ts` with a call to a Supabase Edge Function that proxies Google Cloud Speech-to-Text, Cloud Translation, and Text-to-Speech (keeping the service-account credential server-side). See the full architecture and setup steps in the original plan: `~/.claude/plans/kconnect-ai-an-lazy-shannon.md`.
+The frontend calls one function, `mockConverse(request)` in `frontend/lib/mockConverse.ts`. To go live, replace its internals with a real API call — the request/response shape below is the contract to keep, defined in `frontend/lib/types.ts`:
 
-**Known risk to verify first**: Google Cloud's Text-to-Speech/Speech-to-Text may have limited or no Kinyarwanda voice support. Do a live API check before building further backend around it — Cloud Translation does support `rw` text translation regardless.
+```ts
+interface ConverseRequest {
+  direction: "en-to-rw" | "rw-to-en";
+  text?: string;       // set for typed input
+  audioBlob?: Blob;    // set for recorded voice input — exactly one of text/audioBlob is present
+}
 
-## Project structure
+interface ConverseResponse {
+  sourceText: string;       // transcript if audio came in, echo of `text` if text came in
+  translatedText: string;
+  warnings?: string[];      // non-fatal issues to surface in the UI (e.g. STT/TTS degraded)
+}
+```
 
-- `app/` — Next.js App Router pages and layout
-- `components/` — UI components (MicButton, ConversationBubble, LanguageToggle, PhraseChips, HistoryPanel, etc.)
-- `lib/` — state (Zustand store), audio recording, mock pipeline, phrase data, export helpers
-# Kconnect
-# Kconnect
+Note: `audioBlob` is a browser `Blob` — not JSON-serializable as-is. The real endpoint will need multipart/form-data or base64 for the audio payload; that encoding decision is up to whoever builds it.
