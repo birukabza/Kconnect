@@ -30,3 +30,4 @@ Wire up the real pipeline by replacing the internals of `lib/mockConverse.ts` wi
 - `components/` — UI components (MicButton, ConversationBubble, LanguageToggle, PhraseChips, HistoryPanel, etc.)
 - `lib/` — state (Zustand store), audio recording, mock pipeline, phrase data, export helpers
 # Kconnect
+# Kconnect
