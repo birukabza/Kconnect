@@ -39,10 +39,9 @@ export default function Home() {
    * The character waits a random amount of time between
    * 10 and 30 seconds before waving.
    *
-   * Once the wave finishes, another random delay is chosen.
+   * After each wave, another random delay is selected.
    *
-   * The behavior stops whenever the character is listening,
-   * thinking, or speaking.
+   * Waving stops whenever the character becomes active.
    */
   useEffect(() => {
     if (characterState !== "idle") {
@@ -56,8 +55,8 @@ export default function Home() {
     const scheduleWave = () => {
       const delay =
         Math.floor(
-          Math.random() * (30000 - 10000 + 1)
-        ) + 10000;
+          Math.random() * (7000 - 3000 + 1)
+        ) + 3000;
 
       waveTimer = setTimeout(() => {
         setIsWaving(true);
@@ -156,30 +155,34 @@ export default function Home() {
         }
 
         /*
-         * Short wave animation.
+         * Short one-time wave.
          *
-         * JavaScript controls WHEN the wave happens.
-         * This animation only controls HOW the hand moves.
+         * JavaScript decides WHEN the wave happens.
+         * This animation decides HOW the arm moves.
          */
         @keyframes kconnectWave {
           0% {
-            transform: rotate(8deg);
+            transform: rotate(0deg);
           }
 
-          25% {
+          20% {
+            transform: rotate(-22deg);
+          }
+
+          40% {
+            transform: rotate(14deg);
+          }
+
+          60% {
             transform: rotate(-18deg);
           }
 
-          50% {
+          80% {
             transform: rotate(10deg);
           }
 
-          75% {
-            transform: rotate(-14deg);
-          }
-
           100% {
-            transform: rotate(8deg);
+            transform: rotate(0deg);
           }
         }
 
@@ -230,14 +233,12 @@ export default function Home() {
         }
 
         /*
-         * This is applied directly to the visible SVG arm.
-         *
-         * transform-box makes the transform origin work
-         * correctly on the SVG path.
+         * The visible arm and hand are grouped together and
+         * rotated around the shoulder.
          */
         .kconnect-wave {
-          transform-box: fill-box;
-          transform-origin: 0% 50%;
+          transform-box: view-box;
+          transform-origin: 81px 76px;
           animation: kconnectWave 0.9s ease-in-out;
         }
 
@@ -290,8 +291,8 @@ export default function Home() {
          * Fixed center anchor.
          *
          * The anchor controls the character's position.
-         * The animated character is inside it, so its animations
-         * cannot move the character away from the center.
+         * The character itself can animate without moving away
+         * from the center of the screen.
          */}
         <div className="absolute left-1/2 top-1/2 z-10 h-28 w-28 -translate-x-1/2 -translate-y-1/2">
           {/* Animated character */}
@@ -407,25 +408,26 @@ export default function Home() {
                   className="text-rw-blue"
                 />
 
-                {/* Right arm — randomly waves while idle */}
-                <path
-                  d="M81 76C88 75 94 69 95 61"
-                  stroke="currentColor"
-                  strokeWidth="6"
-                  strokeLinecap="round"
-                  className={`text-rw-blue ${
-                    isWaving ? "kconnect-wave" : ""
-                  }`}
-                />
+                {/* Right arm + hand */}
+                <g
+                  className={isWaving ? "kconnect-wave" : undefined}
+                >
+                  <path
+                    d="M81 76C88 75 94 69 95 61"
+                    stroke="currentColor"
+                    strokeWidth="6"
+                    strokeLinecap="round"
+                    className="text-rw-blue"
+                  />
 
-                {/* Hand */}
-                <circle
-                  cx="95"
-                  cy="59"
-                  r="5"
-                  fill="currentColor"
-                  className="text-rw-yellow"
-                />
+                  <circle
+                    cx="95"
+                    cy="59"
+                    r="5"
+                    fill="currentColor"
+                    className="text-rw-yellow"
+                  />
+                </g>
               </svg>
 
               {/* Thinking dots */}
