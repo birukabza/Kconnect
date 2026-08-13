@@ -10,7 +10,10 @@ import {
   MicPermissionError,
   SilenceDetector,
 } from "@/lib/audioRecorder";
-import { useConversePipeline } from "@/lib/useConversePipeline";
+import {
+  stopBackendAudioPlayback,
+  useConversePipeline,
+} from "@/lib/useConversePipeline";
 import { Spinner } from "./ui/Spinner";
 import { Toast } from "./ui/Toast";
 
@@ -98,6 +101,7 @@ export function MicButton() {
     }
 
     if (status === "speaking") {
+      stopBackendAudioPlayback();
       window.speechSynthesis?.cancel();
       setStatus("idle");
       return;

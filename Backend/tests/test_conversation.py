@@ -12,11 +12,33 @@ def test_health():
     assert response.status_code == 200
 
 
-def test_conversation():
+def test_conversation(monkeypatch):
+    async def successful_process_audio(
+        audio_bytes,
+        content_type=None,
+        filename=None,
+        direction=None,
+    ):
+        return {
+            "detected_language": "en",
+            "transcript": "Hello",
+            "translated_text": "Muraho",
+            "translated_audio": "AAAA",
+            "translated_audio_mime_type": "audio/mpeg",
+        }
+
+    monkeypatch.setattr(
+        "app.api.conversation.process_audio",
+        successful_process_audio
+    )
+
     audio_content = b"fake audio data"
 
     response = client.post(
         "/api/conversation",
+        data={
+            "direction": "en-to-rw",
+        },
         files={
             "audio": (
                 "test.wav",
@@ -33,6 +55,31 @@ def test_conversation():
     assert data["detected_language"] == "en"
     assert "transcript" in data
     assert "translated_text" in data
+    assert data["translated_audio_mime_type"] == "audio/mpeg"
+
+
+def test_invalid_direction():
+    audio_content = b"fake audio data"
+
+    response = client.post(
+        "/api/conversation",
+        data={
+            "direction": "fr-to-rw",
+        },
+        files={
+            "audio": (
+                "test.wav",
+                audio_content,
+                "audio/wav"
+            )
+        }
+    )
+
+    assert response.status_code == 400
+
+    data = response.json()
+
+    assert data["detail"] == "Unsupported translation direction."
 
 
 def test_invalid_audio_type():
@@ -101,7 +148,9 @@ def test_audio_too_large():
 def test_ai_processing_failure(monkeypatch):
     async def failing_process_audio(
         audio_bytes,
-        content_type=None
+        content_type=None,
+        filename=None,
+        direction=None,
     ):
         raise Exception("Test AI failure")
 

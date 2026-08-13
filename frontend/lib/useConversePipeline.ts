@@ -15,6 +15,7 @@ interface BackendConversationResponse {
   transcript: string;
   translated_text: string;
   translated_audio?: string | null;
+  translated_audio_mime_type?: string | null;
   intent?: BackendIntent | null;
   cultural_tip?: string | null;
   source?: string | null;
@@ -23,6 +24,63 @@ interface BackendConversationResponse {
 const API_URL =
   process.env.NEXT_PUBLIC_API_URL ??
   "http://127.0.0.1:8000";
+
+let stopActiveBackendAudio: (() => void) | null = null;
+
+export function stopBackendAudioPlayback() {
+  stopActiveBackendAudio?.();
+  stopActiveBackendAudio = null;
+}
+
+async function playBackendAudio(
+  audioBase64: string,
+  mimeType = "audio/mpeg"
+): Promise<void> {
+  if (typeof Audio === "undefined") {
+    throw new Error("Audio playback is not supported in this browser.");
+  }
+
+  stopBackendAudioPlayback();
+
+  const audio = new Audio(
+    `data:${mimeType};base64,${audioBase64}`
+  );
+
+  const finished = new Promise<void>((resolve, reject) => {
+    let settled = false;
+
+    const settle = (error?: Error) => {
+      if (settled) return;
+
+      settled = true;
+      stopActiveBackendAudio = null;
+
+      if (error) {
+        reject(error);
+      } else {
+        resolve();
+      }
+    };
+
+    stopActiveBackendAudio = () => {
+      audio.pause();
+      audio.currentTime = 0;
+      settle();
+    };
+
+    audio.onended = () => settle();
+    audio.onerror = () =>
+      settle(new Error("Synthesized audio playback failed."));
+  });
+
+  try {
+    await audio.play();
+    await finished;
+  } catch (error) {
+    stopBackendAudioPlayback();
+    throw error;
+  }
+}
 
 export function useConversePipeline(
   onWarning?: (message: string) => void
@@ -43,6 +101,10 @@ export function useConversePipeline(
     (state) => state.setDirection
   );
 
+  const direction = useConversationStore(
+    (state) => state.direction
+  );
+
   const clearSession = useConversationStore(
     (state) => state.clearSession
   );
@@ -50,22 +112,24 @@ export function useConversePipeline(
   return useCallback(
     async (input: { audioBlob: Blob }) => {
       const id = crypto.randomUUID();
+      const initialSource =
+        direction === "en-to-rw" ? "en" : "rw";
+      const initialTarget =
+        direction === "en-to-rw" ? "rw" : "en";
 
       /*
-       * We don't know the actual language yet.
-       *
-       * The backend will detect it after receiving the audio.
+       * The current direction is the expected speaker handoff.
        * This initial direction is only used to satisfy the Message
        * shape while the request is being processed.
        */
       const message: Message = {
         id,
-        direction: "en-to-rw",
+        direction,
         inputType: "audio",
         sourceText: "Listening…",
-        sourceLang: "en",
+        sourceLang: initialSource,
         translatedText: "",
-        targetLang: "rw",
+        targetLang: initialTarget,
         createdAt: Date.now(),
         status: "pending",
       };
@@ -81,10 +145,12 @@ export function useConversePipeline(
           input.audioBlob,
           "conversation.webm"
         );
+        formData.append("direction", direction);
 
         console.log("Sending audio to backend:", {
           mimeType: input.audioBlob.type,
           size: input.audioBlob.size,
+          direction,
         });
 
         const response = await fetch(
@@ -167,20 +233,40 @@ export function useConversePipeline(
          */
         setStatus("speaking");
 
-        const { warning, finished } = speak(
-          result.translated_text,
-          detectedTarget
-        );
+        if (result.translated_audio) {
+          try {
+            await playBackendAudio(
+              result.translated_audio,
+              result.translated_audio_mime_type ?? "audio/mpeg"
+            );
+          } catch {
+            onWarning?.(
+              "Could not play synthesized audio; using browser speech instead."
+            );
 
-        if (warning) {
-          onWarning?.(warning);
+            const { warning, finished } = speak(
+              result.translated_text,
+              detectedTarget
+            );
+
+            if (warning) {
+              onWarning?.(warning);
+            }
+
+            await finished;
+          }
+        } else {
+          const { warning, finished } = speak(
+            result.translated_text,
+            detectedTarget
+          );
+
+          if (warning) {
+            onWarning?.(warning);
+          }
+
+          await finished;
         }
-
-        /*
-         * Wait for actual browser speech completion rather than
-         * using a fixed timeout.
-         */
-        await finished;
 
         /*
          * Remove the temporary translation bubble and return
@@ -212,6 +298,7 @@ export function useConversePipeline(
       addMessage,
       updateMessage,
       setDirection,
+      direction,
       clearSession,
       onWarning,
     ]
