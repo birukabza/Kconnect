@@ -2,7 +2,7 @@ import { useCallback } from "react";
 
 import { useConversationStore } from "./conversationStore";
 import { speak } from "./mockConverse";
-import { Message } from "./types";
+import { Direction, Message } from "./types";
 
 interface BackendIntent {
   category?: string | null;
@@ -39,6 +39,10 @@ export function useConversePipeline(
     (state) => state.updateMessage
   );
 
+  const setDirection = useConversationStore(
+    (state) => state.setDirection
+  );
+
   const clearSession = useConversationStore(
     (state) => state.clearSession
   );
@@ -47,6 +51,13 @@ export function useConversePipeline(
     async (input: { audioBlob: Blob }) => {
       const id = crypto.randomUUID();
 
+      /*
+       * We don't know the actual language yet.
+       *
+       * The backend will detect it after receiving the audio.
+       * This initial direction is only used to satisfy the Message
+       * shape while the request is being processed.
+       */
       const message: Message = {
         id,
         direction: "en-to-rw",
@@ -103,18 +114,39 @@ export function useConversePipeline(
         const result =
           (await response.json()) as BackendConversationResponse;
 
-        const detectedSource =
-          result.detected_language;
+        /*
+         * The backend is the source of truth for the spoken language.
+         */
+        const detectedSource = result.detected_language;
 
         const detectedTarget =
           result.detected_language === "en"
             ? "rw"
             : "en";
 
-        const detectedDirection =
+        const detectedDirection: Direction =
           result.detected_language === "en"
             ? "en-to-rw"
             : "rw-to-en";
+
+        /*
+         * After this person speaks, the other person is expected
+         * to respond in the translated language.
+         *
+         * Therefore:
+         *
+         * English speaker
+         *   EN -> RW
+         *   next expected turn: RW -> EN
+         *
+         * Kinyarwanda speaker
+         *   RW -> EN
+         *   next expected turn: EN -> RW
+         */
+        const nextDirection: Direction =
+          detectedDirection === "en-to-rw"
+            ? "rw-to-en"
+            : "en-to-rw";
 
         updateMessage(id, {
           direction: detectedDirection,
@@ -125,9 +157,17 @@ export function useConversePipeline(
           status: "done",
         });
 
+        /*
+         * Store the direction expected for the next speaker.
+         */
+        setDirection(nextDirection);
+
+        /*
+         * The translation is now visible and being spoken.
+         */
         setStatus("speaking");
 
-        const { warning } = speak(
+        const { warning, finished } = speak(
           result.translated_text,
           detectedTarget
         );
@@ -137,13 +177,17 @@ export function useConversePipeline(
         }
 
         /*
-         * Keep the translation visible while the response is being
-         * spoken. Then clear it so the next person gets a clean screen.
+         * Wait for actual browser speech completion rather than
+         * using a fixed timeout.
          */
-        setTimeout(() => {
-          clearSession();
-          setStatus("idle");
-        }, 1600);
+        await finished;
+
+        /*
+         * Remove the temporary translation bubble and return
+         * the interface to the ready state.
+         */
+        clearSession();
+        setStatus("idle");
       } catch (error) {
         updateMessage(id, {
           status: "error",
@@ -167,6 +211,7 @@ export function useConversePipeline(
       setStatus,
       addMessage,
       updateMessage,
+      setDirection,
       clearSession,
       onWarning,
     ]

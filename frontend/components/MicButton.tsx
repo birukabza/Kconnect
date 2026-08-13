@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import clsx from "clsx";
-import { Mic, Square } from "lucide-react";
+import { Mic, Square, Volume2 } from "lucide-react";
 
 import { useConversationStore } from "@/lib/conversationStore";
 import {
@@ -164,41 +164,152 @@ export function MicButton() {
           ? "Listening…"
           : "Tap to stop"
         : status === "processing"
-          ? "Translating…"
+          ? "Thinking…"
           : status === "speaking"
             ? "Speaking…"
             : "Try again";
 
+  const isListening = status === "listening";
+  const isProcessing = status === "processing";
+  const isSpeaking = status === "speaking";
+  const isError = status === "error";
+
   return (
     <div className="flex flex-col items-center gap-3">
+      <style jsx>{`
+        @keyframes micPulse {
+          0%,
+          100% {
+            transform: scale(1);
+            opacity: 0.25;
+          }
+
+          50% {
+            transform: scale(1.18);
+            opacity: 0;
+          }
+        }
+
+        @keyframes micPulseInner {
+          0%,
+          100% {
+            transform: scale(1);
+            opacity: 0.35;
+          }
+
+          50% {
+            transform: scale(1.1);
+            opacity: 0;
+          }
+        }
+
+        @keyframes micFloat {
+          0%,
+          100% {
+            transform: translateY(0);
+          }
+
+          50% {
+            transform: translateY(-2px);
+          }
+        }
+
+        @keyframes speakingPulse {
+          0%,
+          100% {
+            transform: scale(1);
+          }
+
+          50% {
+            transform: scale(1.05);
+          }
+        }
+
+        .mic-pulse {
+          animation: micPulse 1.8s ease-out infinite;
+        }
+
+        .mic-pulse-inner {
+          animation: micPulseInner 1.4s ease-out infinite;
+        }
+
+        .mic-listening-icon {
+          animation: micFloat 0.9s ease-in-out infinite;
+        }
+
+        .mic-speaking {
+          animation: speakingPulse 0.9s ease-in-out infinite;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+          .mic-pulse,
+          .mic-pulse-inner,
+          .mic-listening-icon,
+          .mic-speaking {
+            animation: none;
+          }
+        }
+      `}</style>
+
       <button
         type="button"
         onClick={handleClick}
-        disabled={status === "processing"}
-        aria-pressed={status === "listening"}
+        disabled={isProcessing}
+        aria-pressed={isListening}
         aria-label={label}
         className={clsx(
-          "relative flex h-20 w-20 items-center justify-center rounded-full text-white shadow-lg transition-transform",
+          "relative flex h-20 w-20 items-center justify-center rounded-full text-white shadow-lg",
+          "transition-all duration-200",
           "focus:outline-none focus-visible:ring-4 focus-visible:ring-rw-yellow/60",
-          "disabled:cursor-not-allowed disabled:opacity-80",
-          status === "idle" && "bg-rw-blue hover:scale-105",
-          status === "listening" && "bg-rw-blue",
-          status === "processing" && "bg-rw-blue",
-          status === "speaking" && "bg-rw-green",
-          status === "error" && "bg-rose-600"
+          "disabled:cursor-not-allowed disabled:opacity-90",
+          "active:scale-95",
+          !isListening &&
+            !isProcessing &&
+            !isSpeaking &&
+            !isError &&
+            "hover:scale-105",
+          isListening && "bg-rw-blue",
+          isProcessing && "bg-rw-blue",
+          isSpeaking && "bg-rw-green",
+          status === "idle" && "bg-rw-blue",
+          isError && "bg-rose-600",
+          isSpeaking && "mic-speaking"
         )}
       >
-        {status === "listening" && (
+        {/* Outer listening pulse */}
+        {isListening && (
+          <>
+            <span
+              className="mic-pulse absolute inset-0 rounded-full bg-rw-yellow"
+              aria-hidden="true"
+            />
+
+            <span
+              className="mic-pulse-inner absolute inset-0 rounded-full bg-rw-yellow"
+              aria-hidden="true"
+            />
+          </>
+        )}
+
+        {/* Inner button glow */}
+        {isListening && (
           <span
-            className="absolute inset-0 rounded-full bg-rw-yellow motion-safe:animate-pulse-ring"
+            className="absolute inset-1 rounded-full border-2 border-rw-yellow/60"
             aria-hidden="true"
           />
         )}
 
-        <span className="relative z-10">
-          {status === "processing" ? (
+        <span
+          className={clsx(
+            "relative z-10 flex items-center justify-center",
+            isListening && "mic-listening-icon"
+          )}
+        >
+          {isProcessing ? (
             <Spinner className="h-7 w-7" />
-          ) : status === "listening" ? (
+          ) : isSpeaking ? (
+            <Volume2 className="h-7 w-7" aria-hidden="true" />
+          ) : isListening ? (
             <Square
               className="h-6 w-6"
               aria-hidden="true"
@@ -210,7 +321,16 @@ export function MicButton() {
         </span>
       </button>
 
-      <span className="text-xs font-medium text-rw-ink/60">
+      <span
+        className={clsx(
+          "text-xs font-medium transition-colors duration-200",
+          isListening && "text-rw-blue",
+          isProcessing && "text-rw-ink/60",
+          isSpeaking && "text-rw-green",
+          isError && "text-rose-600",
+          status === "idle" && "text-rw-ink/60"
+        )}
+      >
         {label}
       </span>
 
