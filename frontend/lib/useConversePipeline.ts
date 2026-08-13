@@ -2,7 +2,7 @@ import { useCallback } from "react";
 
 import { useConversationStore } from "./conversationStore";
 import { speak } from "./mockConverse";
-import { Direction, Message } from "./types";
+import { Message } from "./types";
 
 interface BackendIntent {
   category?: string | null;
@@ -97,10 +97,6 @@ export function useConversePipeline(
     (state) => state.updateMessage
   );
 
-  const setDirection = useConversationStore(
-    (state) => state.setDirection
-  );
-
   const direction = useConversationStore(
     (state) => state.direction
   );
@@ -111,17 +107,17 @@ export function useConversePipeline(
 
   return useCallback(
     async (input: { audioBlob: Blob }) => {
+      if (!direction) {
+        onWarning?.("Select a speech direction first.");
+        return;
+      }
+
       const id = crypto.randomUUID();
       const initialSource =
         direction === "en-to-rw" ? "en" : "rw";
       const initialTarget =
         direction === "en-to-rw" ? "rw" : "en";
 
-      /*
-       * The current direction is the expected speaker handoff.
-       * This initial direction is only used to satisfy the Message
-       * shape while the request is being processed.
-       */
       const message: Message = {
         id,
         direction,
@@ -180,53 +176,14 @@ export function useConversePipeline(
         const result =
           (await response.json()) as BackendConversationResponse;
 
-        /*
-         * The backend is the source of truth for the spoken language.
-         */
-        const detectedSource = result.detected_language;
-
-        const detectedTarget =
-          result.detected_language === "en"
-            ? "rw"
-            : "en";
-
-        const detectedDirection: Direction =
-          result.detected_language === "en"
-            ? "en-to-rw"
-            : "rw-to-en";
-
-        /*
-         * After this person speaks, the other person is expected
-         * to respond in the translated language.
-         *
-         * Therefore:
-         *
-         * English speaker
-         *   EN -> RW
-         *   next expected turn: RW -> EN
-         *
-         * Kinyarwanda speaker
-         *   RW -> EN
-         *   next expected turn: EN -> RW
-         */
-        const nextDirection: Direction =
-          detectedDirection === "en-to-rw"
-            ? "rw-to-en"
-            : "en-to-rw";
-
         updateMessage(id, {
-          direction: detectedDirection,
+          direction,
           sourceText: result.transcript,
-          sourceLang: detectedSource,
+          sourceLang: initialSource,
           translatedText: result.translated_text,
-          targetLang: detectedTarget,
+          targetLang: initialTarget,
           status: "done",
         });
-
-        /*
-         * Store the direction expected for the next speaker.
-         */
-        setDirection(nextDirection);
 
         /*
          * The translation is now visible and being spoken.
@@ -246,7 +203,7 @@ export function useConversePipeline(
 
             const { warning, finished } = speak(
               result.translated_text,
-              detectedTarget
+              initialTarget
             );
 
             if (warning) {
@@ -258,7 +215,7 @@ export function useConversePipeline(
         } else {
           const { warning, finished } = speak(
             result.translated_text,
-            detectedTarget
+            initialTarget
           );
 
           if (warning) {
@@ -297,7 +254,6 @@ export function useConversePipeline(
       setStatus,
       addMessage,
       updateMessage,
-      setDirection,
       direction,
       clearSession,
       onWarning,

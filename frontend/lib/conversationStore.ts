@@ -4,7 +4,7 @@ import { Direction, MicStatus, Message } from "./types";
 
 interface ConversationState {
   messages: Message[];
-  direction: Direction;
+  direction: Direction | null;
   status: MicStatus;
   errorMessage: string | null;
 
@@ -17,14 +17,13 @@ interface ConversationState {
   setError: (message: string | null) => void;
 
   clearSession: () => void;
-  toggleDirection: () => void;
 }
 
 export const useConversationStore = create<ConversationState>()(
   persist(
     (set) => ({
       messages: [],
-      direction: "en-to-rw",
+      direction: null,
       status: "idle",
       errorMessage: null,
 
@@ -47,14 +46,6 @@ export const useConversationStore = create<ConversationState>()(
           direction,
         }),
 
-      toggleDirection: () =>
-        set((state) => ({
-          direction:
-            state.direction === "en-to-rw"
-              ? "rw-to-en"
-              : "en-to-rw",
-        })),
-
       setStatus: (status) =>
         set({
           status,
@@ -72,13 +63,12 @@ export const useConversationStore = create<ConversationState>()(
         }),
     }),
     {
-      name: "kconnect-conversation",
+      name: "kconnect-conversation-v2",
 
-      // Persist only conversation history and the expected direction.
-      // Transient UI state starts fresh after a reload.
+      // Persist only conversation history. Direction must be selected
+      // intentionally each time the app starts.
       partialize: (state) => ({
         messages: state.messages,
-        direction: state.direction,
       }),
     }
   )

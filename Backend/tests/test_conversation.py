@@ -87,6 +87,9 @@ def test_invalid_audio_type():
 
     response = client.post(
         "/api/conversation",
+        data={
+            "direction": "en-to-rw",
+        },
         files={
             "audio": (
                 "test.jpg",
@@ -106,6 +109,9 @@ def test_invalid_audio_type():
 def test_empty_audio():
     response = client.post(
         "/api/conversation",
+        data={
+            "direction": "en-to-rw",
+        },
         files={
             "audio": (
                 "empty.wav",
@@ -127,6 +133,9 @@ def test_audio_too_large():
 
     response = client.post(
         "/api/conversation",
+        data={
+            "direction": "en-to-rw",
+        },
         files={
             "audio": (
                 "large.wav",
@@ -145,6 +154,21 @@ def test_audio_too_large():
     )
 
 
+def test_missing_direction():
+    response = client.post(
+        "/api/conversation",
+        files={
+            "audio": (
+                "test.wav",
+                b"fake audio data",
+                "audio/wav"
+            )
+        }
+    )
+
+    assert response.status_code == 422
+
+
 def test_ai_processing_failure(monkeypatch):
     async def failing_process_audio(
         audio_bytes,
@@ -161,6 +185,9 @@ def test_ai_processing_failure(monkeypatch):
 
     response = client.post(
         "/api/conversation",
+        data={
+            "direction": "en-to-rw",
+        },
         files={
             "audio": (
                 "test.wav",

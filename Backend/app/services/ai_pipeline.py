@@ -17,11 +17,7 @@ BACKEND_DIR = Path(__file__).resolve().parents[2]
 load_dotenv(BACKEND_DIR / ".env")
 
 AUDIO_MIME_TYPE = "audio/mpeg"
-DEFAULT_DIRECTION = "en-to-rw"
-RW_TTS_FALLBACK_LANGUAGE = os.getenv(
-    "GOOGLE_TTS_RW_FALLBACK_LANGUAGE",
-    "sw-KE",
-)
+KINYARWANDA_TTS_LANGUAGE_CODE = "sw-KE"
 
 DIRECTION_CONFIG = {
     "en-to-rw": {
@@ -184,35 +180,6 @@ async def _translate_text(
     return response.translations[0].translated_text
 
 
-@lru_cache(maxsize=4)
-def _pick_rw_voice() -> tuple[str, str]:
-    client = _tts_client()
-
-    rw_voices = client.list_voices(language_code="rw").voices
-
-    if rw_voices:
-        voice = rw_voices[0]
-        return voice.language_codes[0], voice.name
-
-    fallback_voices = client.list_voices(
-        language_code=RW_TTS_FALLBACK_LANGUAGE
-    ).voices
-
-    if not fallback_voices:
-        raise RuntimeError(
-            f"No {RW_TTS_FALLBACK_LANGUAGE} TTS voices are available."
-        )
-
-    chirp_voices = [
-        voice
-        for voice in fallback_voices
-        if "Chirp3-HD" in voice.name
-    ]
-    voice = chirp_voices[0] if chirp_voices else fallback_voices[0]
-
-    return voice.language_codes[0], voice.name
-
-
 async def _synthesize_speech(
     text: str,
     target_language: str,
@@ -220,10 +187,8 @@ async def _synthesize_speech(
     client = _tts_client()
 
     if target_language == "rw":
-        language_code, voice_name = _pick_rw_voice()
         voice = texttospeech.VoiceSelectionParams(
-            language_code=language_code,
-            name=voice_name,
+            language_code=KINYARWANDA_TTS_LANGUAGE_CODE,
         )
     else:
         voice = texttospeech.VoiceSelectionParams(
@@ -241,20 +206,18 @@ async def _synthesize_speech(
     return response.audio_content
 
 
-def _direction_config(direction: str | None):
-    normalized = direction or DEFAULT_DIRECTION
-
-    if normalized not in DIRECTION_CONFIG:
+def _direction_config(direction: str):
+    if direction not in DIRECTION_CONFIG:
         raise ValueError("Unsupported translation direction.")
 
-    return DIRECTION_CONFIG[normalized]
+    return DIRECTION_CONFIG[direction]
 
 
 async def process_audio(
     audio_bytes: bytes,
     content_type: str | None = None,
     filename: str | None = None,
-    direction: str | None = None,
+    direction: str = "",
 ) -> ConversationResponse:
     """
     Run the speech-to-speech path:

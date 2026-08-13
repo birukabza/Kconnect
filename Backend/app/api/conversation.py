@@ -33,7 +33,7 @@ ALLOWED_DIRECTIONS = {
 )
 async def process_conversation(
     audio: UploadFile = File(...),
-    direction: str | None = Form(default=None),
+    direction: str = Form(...),
 ):
     logger.info(
         "Conversation request received: filename=%s content_type=%s",
@@ -54,7 +54,7 @@ async def process_conversation(
             detail="Unsupported audio file type.",
         )
 
-    if direction is not None and direction not in ALLOWED_DIRECTIONS:
+    if direction not in ALLOWED_DIRECTIONS:
         raise HTTPException(
             status_code=400,
             detail="Unsupported translation direction.",
