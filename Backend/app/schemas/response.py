@@ -14,6 +14,7 @@ class ConversationResponse(BaseModel):
     transcript: str
     translated_text: str
     translated_audio: Optional[str] = None
+    translated_audio_mime_type: Optional[str] = None
     intent: Optional[Intent] = None
     cultural_tip: Optional[str] = None
     source: Optional[str] = None

@@ -11,6 +11,9 @@ __pycache__/
 # Environment variables and secrets
 .env
 .env.*
+service_account.json
+*service_account*.json
+*credentials*.json
 
 # IDE files
 .vscode/

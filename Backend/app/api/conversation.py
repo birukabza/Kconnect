@@ -1,6 +1,6 @@
 import logging
 
-from fastapi import APIRouter, File, HTTPException, UploadFile
+from fastapi import APIRouter, File, Form, HTTPException, UploadFile
 
 from app.schemas.response import ConversationResponse
 from app.services.ai_pipeline import process_audio
@@ -14,9 +14,17 @@ ALLOWED_AUDIO_TYPES = {
     "audio/webm",
     "audio/mpeg",
     "audio/mp4",
+    "audio/ogg",
 }
 
 MAX_AUDIO_SIZE = 10 * 1024 * 1024
+
+ALLOWED_DIRECTIONS = {
+    "en-to-rw",
+    "rw-to-en",
+    "en2rw",
+    "rw2en",
+}
 
 
 @router.post(
@@ -25,6 +33,7 @@ MAX_AUDIO_SIZE = 10 * 1024 * 1024
 )
 async def process_conversation(
     audio: UploadFile = File(...),
+    direction: str = Form(...),
 ):
     logger.info(
         "Conversation request received: filename=%s content_type=%s",
@@ -43,6 +52,12 @@ async def process_conversation(
         raise HTTPException(
             status_code=400,
             detail="Unsupported audio file type.",
+        )
+
+    if direction not in ALLOWED_DIRECTIONS:
+        raise HTTPException(
+            status_code=400,
+            detail="Unsupported translation direction.",
         )
 
     audio_bytes = await audio.read()
@@ -74,6 +89,8 @@ async def process_conversation(
         result = await process_audio(
             audio_bytes=audio_bytes,
             content_type=content_type,
+            filename=audio.filename,
+            direction=direction,
         )
 
         logger.info("AI pipeline completed successfully.")

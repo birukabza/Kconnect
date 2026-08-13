@@ -10,13 +10,17 @@ import {
   MicPermissionError,
   SilenceDetector,
 } from "@/lib/audioRecorder";
-import { useConversePipeline } from "@/lib/useConversePipeline";
+import {
+  stopBackendAudioPlayback,
+  useConversePipeline,
+} from "@/lib/useConversePipeline";
 import { Spinner } from "./ui/Spinner";
 import { Toast } from "./ui/Toast";
 
 export function MicButton() {
   const status = useConversationStore((state) => state.status);
   const setStatus = useConversationStore((state) => state.setStatus);
+  const direction = useConversationStore((state) => state.direction);
 
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   const [autoStopArmed, setAutoStopArmed] = useState(false);
@@ -98,12 +102,18 @@ export function MicButton() {
     }
 
     if (status === "speaking") {
+      stopBackendAudioPlayback();
       window.speechSynthesis?.cancel();
       setStatus("idle");
       return;
     }
 
     if (status === "idle" || status === "error") {
+      if (!direction) {
+        showToast("Select a speech direction first.");
+        return;
+      }
+
       if (!recordingSupported) {
         showToast("Microphone recording isn't supported in this browser.");
         return;
@@ -150,6 +160,7 @@ export function MicButton() {
     }
   }, [
     status,
+    direction,
     recordingSupported,
     setStatus,
     showToast,
@@ -157,7 +168,9 @@ export function MicButton() {
   ]);
 
   const label =
-    status === "idle"
+    !direction && status === "idle"
+      ? "Select direction"
+      : status === "idle"
       ? "Tap to speak"
       : status === "listening"
         ? autoStopArmed
@@ -173,6 +186,7 @@ export function MicButton() {
   const isProcessing = status === "processing";
   const isSpeaking = status === "speaking";
   const isError = status === "error";
+  const waitingForDirection = !direction && status === "idle";
 
   return (
     <div className="flex flex-col items-center gap-3">
@@ -254,7 +268,7 @@ export function MicButton() {
       <button
         type="button"
         onClick={handleClick}
-        disabled={isProcessing}
+        disabled={isProcessing || waitingForDirection}
         aria-pressed={isListening}
         aria-label={label}
         className={clsx(
@@ -272,6 +286,7 @@ export function MicButton() {
           isProcessing && "bg-rw-blue",
           isSpeaking && "bg-rw-green",
           status === "idle" && "bg-rw-blue",
+          waitingForDirection && "bg-rw-ink/25 shadow-none",
           isError && "bg-rose-600",
           isSpeaking && "mic-speaking"
         )}
@@ -328,7 +343,10 @@ export function MicButton() {
           isProcessing && "text-rw-ink/60",
           isSpeaking && "text-rw-green",
           isError && "text-rose-600",
-          status === "idle" && "text-rw-ink/60"
+          waitingForDirection && "text-rw-ink/40",
+          status === "idle" &&
+            !waitingForDirection &&
+            "text-rw-ink/60"
         )}
       >
         {label}

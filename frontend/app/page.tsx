@@ -3,12 +3,14 @@
 import { useEffect, useState } from "react";
 
 import { ConversationBubble } from "@/components/ConversationBubble";
+import { LanguageToggle } from "@/components/LanguageToggle";
 import { MicButton } from "@/components/MicButton";
 import { useConversationStore } from "@/lib/conversationStore";
 
 export default function Home() {
   const messages = useConversationStore((state) => state.messages);
   const status = useConversationStore((state) => state.status);
+  const direction = useConversationStore((state) => state.direction);
 
   const [isWaving, setIsWaving] = useState(false);
 
@@ -31,7 +33,8 @@ export default function Home() {
 
   const showReadyCue =
     status === "idle" &&
-    messages.length === 0;
+    messages.length === 0 &&
+    direction !== null;
 
   /*
    * Random idle waving.
@@ -284,6 +287,8 @@ export default function Home() {
           </span>
         </div>
       </header>
+
+      <LanguageToggle />
 
       {/* Main conversation area */}
       <section className="relative flex flex-1 items-center justify-center px-5 pb-10">
