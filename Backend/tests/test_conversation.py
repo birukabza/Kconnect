@@ -1,9 +1,25 @@
+from bson import ObjectId
 from fastapi.testclient import TestClient
+import pytest
 
+from app.core.auth import get_current_user
 from app.main import app
 
 
 client = TestClient(app)
+
+
+@pytest.fixture(autouse=True)
+def authenticated_user():
+    app.dependency_overrides[get_current_user] = lambda: {
+        "_id": ObjectId(),
+        "name": "Test User",
+        "email": "test@example.com",
+    }
+
+    yield
+
+    app.dependency_overrides.pop(get_current_user, None)
 
 
 def test_health():

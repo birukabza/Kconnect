@@ -1,7 +1,9 @@
 import logging
+from typing import Annotated, Any
 
-from fastapi import APIRouter, File, Form, HTTPException, UploadFile
+from fastapi import APIRouter, Depends, File, Form, HTTPException, UploadFile
 
+from app.core.auth import get_current_user
 from app.schemas.response import ConversationResponse
 from app.services.ai_pipeline import process_audio
 
@@ -32,11 +34,16 @@ ALLOWED_DIRECTIONS = {
     response_model=ConversationResponse,
 )
 async def process_conversation(
+    current_user: Annotated[
+        dict[str, Any],
+        Depends(get_current_user),
+    ],
     audio: UploadFile = File(...),
     direction: str = Form(...),
 ):
     logger.info(
-        "Conversation request received: filename=%s content_type=%s",
+        "Conversation request received: user_id=%s filename=%s content_type=%s",
+        current_user["_id"],
         audio.filename,
         audio.content_type,
     )

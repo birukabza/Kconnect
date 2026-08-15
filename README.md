@@ -1,45 +1,67 @@
 # KConnect AI
 
-Helps foreigners in Rwanda communicate with locals across the English↔Kinyarwanda language barrier  speak in one language, hear it spoken aloud in the other.
+KConnect translates spoken English and Kinyarwanda in both directions. The
+Next.js frontend records speech and plays the translated audio returned by the
+FastAPI backend.
 
-Frontend is a fully interactive Next.js app (mic recording, text input, quick-phrase shortcuts, conversation history, export). It currently runs against a mock translation pipeline (`frontend/lib/mockConverse.ts`), so it works with no backend wired up yet.
+## Current features
 
-## Repo layout
+- Account registration and login
+- Password hashing with bcrypt
+- MongoDB user storage through PyMongo
+- JWT bearer authentication
+- Authenticated English/Kinyarwanda speech translation
+- Google Speech-to-Text, Translation, and Text-to-Speech integration
 
-- `frontend/` — the Next.js app (see below)
-- `Backend/` — not built yet; see "Backend integration" below for the contract to implement
+The cultural-tip dataset and server-side conversation history are not connected
+yet.
 
-## Run the frontend
+## Backend setup
 
-```bash
+MongoDB must be running locally, or `MONGODB_URI` must point to a reachable
+MongoDB deployment.
+
+```powershell
+cd Backend
+Copy-Item .env.example .env
+python -m pip install -r requirements.txt
+python -m uvicorn app.main:app --reload
+```
+
+Set these values in `Backend/.env`:
+
+```dotenv
+MONGODB_URI=mongodb://localhost:27017
+MONGODB_DATABASE=kconnect
+JWT_SECRET_KEY=replace-with-a-long-random-secret
+ACCESS_TOKEN_EXPIRE_MINUTES=60
+GOOGLE_APPLICATION_CREDENTIALS=C:/path/to/service_account.json
+```
+
+`Backend/.env` and Google credential JSON files are ignored by Git.
+
+The API runs at `http://127.0.0.1:8000`. Its interactive documentation is at
+`http://127.0.0.1:8000/docs`.
+
+## Frontend setup
+
+In a second terminal:
+
+```powershell
 cd frontend
 npm install
 npm run dev
 ```
 
-Open http://localhost:3000.
+Open `http://localhost:3000`, create an account, select a translation direction,
+and use the microphone.
 
-## What's real vs. simulated
+## Tests
 
-- **Real**: mic permission/recording (`MediaRecorder`), UI state machine, conversation history (persisted to `localStorage`), quick-phrase translations for the phrases in `lib/phrases.ts`, spoken playback via the browser's Web Speech API, copy/download transcript.
-- **Simulated**: text outside the known phrase list gets a placeholder translation (`[demo translation] ...`); recorded audio gets a placeholder transcript — no Speech-to-Text is wired up yet.
+```powershell
+cd Backend
+python -m pytest -q
 
-## Backend integration
-
-The frontend calls one function, `mockConverse(request)` in `frontend/lib/mockConverse.ts`. To go live, replace its internals with a real API call — the request/response shape below is the contract to keep, defined in `frontend/lib/types.ts`:
-
-```ts
-interface ConverseRequest {
-  direction: "en-to-rw" | "rw-to-en";
-  text?: string;       // set for typed input
-  audioBlob?: Blob;    // set for recorded voice input — exactly one of text/audioBlob is present
-}
-
-interface ConverseResponse {
-  sourceText: string;       // transcript if audio came in, echo of `text` if text came in
-  translatedText: string;
-  warnings?: string[];      // non-fatal issues to surface in the UI (e.g. STT/TTS degraded)
-}
+cd ..\frontend
+npm run build
 ```
-
-Note: `audioBlob` is a browser `Blob` — not JSON-serializable as-is. The real endpoint will need multipart/form-data or base64 for the audio payload; that encoding decision is up to whoever builds it.

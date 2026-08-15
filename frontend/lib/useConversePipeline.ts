@@ -1,5 +1,6 @@
 import { useCallback } from "react";
 
+import { useAuthStore } from "./authStore";
 import { useConversationStore } from "./conversationStore";
 import { speak } from "./mockConverse";
 import { Message } from "./types";
@@ -105,10 +106,21 @@ export function useConversePipeline(
     (state) => state.clearSession
   );
 
+  const accessToken = useAuthStore(
+    (state) => state.accessToken
+  );
+
+  const logout = useAuthStore((state) => state.logout);
+
   return useCallback(
     async (input: { audioBlob: Blob }) => {
       if (!direction) {
         onWarning?.("Select a speech direction first.");
+        return;
+      }
+
+      if (!accessToken) {
+        onWarning?.("Sign in to start translating.");
         return;
       }
 
@@ -153,9 +165,17 @@ export function useConversePipeline(
           `${API_URL}/api/conversation`,
           {
             method: "POST",
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
             body: formData,
           }
         );
+
+        if (response.status === 401) {
+          logout();
+          throw new Error("Your session expired. Please sign in again.");
+        }
 
         if (!response.ok) {
           let detail = "Audio processing failed.";
@@ -256,6 +276,8 @@ export function useConversePipeline(
       updateMessage,
       direction,
       clearSession,
+      accessToken,
+      logout,
       onWarning,
     ]
   );

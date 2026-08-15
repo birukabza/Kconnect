@@ -21,9 +21,9 @@ export interface Message {
   status?: "pending" | "done" | "error";
 }
 
-// Contract for the real backend `converse` endpoint (Supabase Edge Function:
-// Speech-to-Text -> Translation -> Text-to-Speech). Exactly one of `text` /
-// `audioBlob` is set — which one tells the backend whether to run STT first.
+// Contract for the speech endpoint:
+// Speech-to-Text -> Translation -> Text-to-Speech. Exactly one of `text` /
+// `audioBlob` is set - which one tells the backend whether to run STT first.
 // There's no separate `inputType` flag: it would just be a second source of
 // truth for the same thing, so callers derive it (`audioBlob ? "audio" : "text"`)
 // instead of passing it.

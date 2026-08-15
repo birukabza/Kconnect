@@ -12,3 +12,4 @@ service_account.json
 .DS_Store
 *.tsbuildinfo
 next-env.d.ts
+.dev-*.log
