@@ -2,12 +2,14 @@
 
 import { useEffect, useState } from "react";
 
+import { AccountMenu } from "@/components/AccountMenu";
+import { AuthGate } from "@/components/AuthGate";
 import { ConversationBubble } from "@/components/ConversationBubble";
 import { LanguageToggle } from "@/components/LanguageToggle";
 import { MicButton } from "@/components/MicButton";
 import { useConversationStore } from "@/lib/conversationStore";
 
-export default function Home() {
+function ConversationExperience() {
   const messages = useConversationStore((state) => state.messages);
   const status = useConversationStore((state) => state.status);
   const direction = useConversationStore((state) => state.direction);
@@ -286,6 +288,8 @@ export default function Home() {
             AI
           </span>
         </div>
+
+        <AccountMenu />
       </header>
 
       <LanguageToggle />
@@ -467,5 +471,13 @@ export default function Home() {
         <MicButton />
       </div>
     </main>
+  );
+}
+
+export default function Home() {
+  return (
+    <AuthGate>
+      <ConversationExperience />
+    </AuthGate>
   );
 }
