@@ -5,6 +5,7 @@ import { LoaderCircle } from "lucide-react";
 
 import { getCurrentUser } from "@/lib/auth";
 import { useAuthStore } from "@/lib/authStore";
+import { clearTemporaryConversationId } from "@/lib/temporaryConversation";
 import { AuthScreen } from "./AuthScreen";
 
 
@@ -19,6 +20,11 @@ export function AuthGate({ children }: { children: ReactNode }) {
   useEffect(() => {
     if (!hydrated || !accessToken) {
       setVerifiedToken(null);
+
+      if (hydrated && !accessToken) {
+        clearTemporaryConversationId();
+      }
+
       return;
     }
 
@@ -33,6 +39,7 @@ export function AuthGate({ children }: { children: ReactNode }) {
       })
       .catch(() => {
         if (!cancelled) {
+          clearTemporaryConversationId();
           logout();
           setVerifiedToken(null);
         }

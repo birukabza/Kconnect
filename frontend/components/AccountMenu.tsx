@@ -4,6 +4,7 @@ import { LogOut } from "lucide-react";
 
 import { useAuthStore } from "@/lib/authStore";
 import { useConversationStore } from "@/lib/conversationStore";
+import { clearTemporaryConversationId } from "@/lib/temporaryConversation";
 
 
 export function AccountMenu() {
@@ -13,6 +14,7 @@ export function AccountMenu() {
 
   const handleLogout = () => {
     clearSession();
+    clearTemporaryConversationId();
     logout();
   };
 

@@ -10,6 +10,7 @@ class Intent(BaseModel):
 
 
 class ConversationResponse(BaseModel):
+    conversation_id: Optional[str] = None
     detected_language: str
     transcript: str
     translated_text: str

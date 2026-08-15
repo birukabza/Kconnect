@@ -3,6 +3,11 @@ import { useCallback } from "react";
 import { useAuthStore } from "./authStore";
 import { useConversationStore } from "./conversationStore";
 import { speak } from "./mockConverse";
+import {
+  clearTemporaryConversationId,
+  getTemporaryConversationId,
+  setTemporaryConversationId,
+} from "./temporaryConversation";
 import { Message } from "./types";
 
 interface BackendIntent {
@@ -12,6 +17,7 @@ interface BackendIntent {
 }
 
 interface BackendConversationResponse {
+  conversation_id?: string | null;
   detected_language: "en" | "rw";
   transcript: string;
   translated_text: string;
@@ -155,11 +161,11 @@ export function useConversePipeline(
         );
         formData.append("direction", direction);
 
-        console.log("Sending audio to backend:", {
-          mimeType: input.audioBlob.type,
-          size: input.audioBlob.size,
-          direction,
-        });
+        const conversationId = getTemporaryConversationId();
+
+        if (conversationId) {
+          formData.append("conversation_id", conversationId);
+        }
 
         const response = await fetch(
           `${API_URL}/api/conversation`,
@@ -173,6 +179,7 @@ export function useConversePipeline(
         );
 
         if (response.status === 401) {
+          clearTemporaryConversationId();
           logout();
           throw new Error("Your session expired. Please sign in again.");
         }
@@ -195,6 +202,10 @@ export function useConversePipeline(
 
         const result =
           (await response.json()) as BackendConversationResponse;
+
+        if (result.conversation_id) {
+          setTemporaryConversationId(result.conversation_id);
+        }
 
         updateMessage(id, {
           direction,

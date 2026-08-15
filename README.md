@@ -12,8 +12,11 @@ FastAPI backend.
 - JWT bearer authentication
 - Authenticated English/Kinyarwanda speech translation
 - Google Speech-to-Text, Translation, and Text-to-Speech integration
+- Hidden temporary conversation context in MongoDB
 
-The cultural-tip dataset and server-side conversation history are not connected
+Temporary conversations retain only the latest 20 text turns and expire after
+60 minutes of inactivity. They are not displayed as history, and recorded or
+synthesized audio is never stored. The cultural-tip dataset is not connected
 yet.
 
 ## Backend setup
@@ -35,6 +38,8 @@ MONGODB_URI=mongodb://localhost:27017
 MONGODB_DATABASE=kconnect
 JWT_SECRET_KEY=replace-with-a-long-random-secret
 ACCESS_TOKEN_EXPIRE_MINUTES=60
+TEMPORARY_CONVERSATION_TTL_MINUTES=60
+TEMPORARY_CONVERSATION_MAX_TURNS=20
 GOOGLE_APPLICATION_CREDENTIALS=C:/path/to/service_account.json
 ```
 

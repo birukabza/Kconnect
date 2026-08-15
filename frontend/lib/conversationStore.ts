@@ -1,5 +1,4 @@
 import { create } from "zustand";
-import { persist } from "zustand/middleware";
 import { Direction, MicStatus, Message } from "./types";
 
 interface ConversationState {
@@ -19,57 +18,44 @@ interface ConversationState {
   clearSession: () => void;
 }
 
-export const useConversationStore = create<ConversationState>()(
-  persist(
-    (set) => ({
-      messages: [],
-      direction: null,
-      status: "idle",
-      errorMessage: null,
+export const useConversationStore = create<ConversationState>((set) => ({
+  messages: [],
+  direction: null,
+  status: "idle",
+  errorMessage: null,
 
-      addMessage: (message) =>
-        set((state) => ({
-          messages: [...state.messages, message],
-        })),
+  addMessage: (message) =>
+    set((state) => ({
+      messages: [...state.messages, message],
+    })),
 
-      updateMessage: (id, patch) =>
-        set((state) => ({
-          messages: state.messages.map((message) =>
-            message.id === id
-              ? { ...message, ...patch }
-              : message
-          ),
-        })),
+  updateMessage: (id, patch) =>
+    set((state) => ({
+      messages: state.messages.map((message) =>
+        message.id === id
+          ? { ...message, ...patch }
+          : message
+      ),
+    })),
 
-      setDirection: (direction) =>
-        set({
-          direction,
-        }),
-
-      setStatus: (status) =>
-        set({
-          status,
-        }),
-
-      setError: (errorMessage) =>
-        set({
-          errorMessage,
-          status: errorMessage ? "error" : "idle",
-        }),
-
-      clearSession: () =>
-        set({
-          messages: [],
-        }),
+  setDirection: (direction) =>
+    set({
+      direction,
     }),
-    {
-      name: "kconnect-conversation-v2",
 
-      // Persist only conversation history. Direction must be selected
-      // intentionally each time the app starts.
-      partialize: (state) => ({
-        messages: state.messages,
-      }),
-    }
-  )
-);
+  setStatus: (status) =>
+    set({
+      status,
+    }),
+
+  setError: (errorMessage) =>
+    set({
+      errorMessage,
+      status: errorMessage ? "error" : "idle",
+    }),
+
+  clearSession: () =>
+    set({
+      messages: [],
+    }),
+}));
