@@ -1,0 +1,929 @@
+[
+  {
+    "id": "transport_001",
+    "category": "transport",
+    "sub_category": "moto",
+    "situation": "carrying_passengers",
+    "rwanda_context": "In Rwanda, a motorcycle taxi (moto) is licensed to carry only one passenger.",
+    "suggested_tip": "Always confirm the driver is only carrying you to stay safe and follow the law."
+  },
+  {
+    "id": "transport_002",
+    "category": "transport",
+    "sub_category": "moto",
+    "situation": "helmet_use",
+    "rwanda_context": "In Rwanda, both the moto rider and the passenger are required to wear a helmet.",
+    "suggested_tip": "Wear and fasten your passenger helmet before the moto starts moving."
+  },
+  {
+    "id": "transport_003",
+    "category": "transport",
+    "sub_category": "bus",
+    "situation": "tap_and_go_payment",
+    "rwanda_context": "In Rwanda, public buses use a cashless 'Tap & Go' payment system. Passengers tap their NFC card on a machine to pay before boarding, and fares are based on the distance traveled.",
+    "suggested_tip": "Buy a Tap & Go card and load it with money at agent points to use the bus."
+  },
+  {
+    "id": "transport_004",
+    "category": "transport",
+    "sub_category": "bus",
+    "situation": "boarding_bus",
+    "rwanda_context": "In Rwanda, you must tap your Tap & Go card at the entry point before boarding.",
+    "suggested_tip": "Tap your card on the machine when you enter the bus."
+  },
+  {
+    "id": "transport_005",
+    "category": "transport",
+    "sub_category": "bus",
+    "situation": "exiting_bus",
+    "rwanda_context": "In Rwanda, you may need to tap your Tap & Go card at the exit to calculate the exact fare for the distance traveled.",
+    "suggested_tip": "Remember to tap your card at the exit point at the end of your journey."
+  },
+  {
+    "id": "transport_006",
+    "category": "transport",
+    "sub_category": "bus",
+    "situation": "bus_fare",
+    "rwanda_context": "In Rwanda, bus fares are determined by distance.",
+    "suggested_tip": "Check the fare chart at the bus stop to plan your trip cost."
+  },
+  {
+    "id": "cultural_001",
+    "category": "cultural",
+    "sub_category": "greetings",
+    "situation": "greeting_elders",
+    "rwanda_context": "In Rwanda, greetings are never rushed; they are seen as a fundamental gesture of human acknowledgment and respect. A polite greeting is expected when you enter a shop or meet someone.",
+    "suggested_tip": "When greeting an elder, a firm handshake is common, which may be accompanied by a slight bow. Women may also bend their knees slightly. Always allow elders to go first through doorways."
+  },
+  {
+    "id": "cultural_002",
+    "category": "cultural",
+    "sub_category": "greetings",
+    "situation": "everyday_greetings",
+    "rwanda_context": "Skipping a greeting is considered rude in Rwanda regardless of how informal the situation seems. Before any business is conducted, it is expected and appreciated to pause and exchange pleasantries.",
+    "suggested_tip": "Use 'Muraho' (Hello) or 'Mwiriwe' (Good afternoon) and follow it with 'Amakuru?' (How are you?). The usual response is 'Ni meza' (I'm fine)."
+  },
+  {
+    "id": "cultural_003",
+    "category": "cultural",
+    "sub_category": "greetings",
+    "situation": "religious_greetings",
+    "rwanda_context": "A large percentage of the Rwandan population is Christian, and religion has deeply permeated daily life.",
+    "suggested_tip": "You may be greeted with 'Praise Jesus' or asked 'Are you saved?'. A smile and a simple 'Thank you' are a polite response. If a missionary persists, answering 'I have been baptized' usually ends the conversation."
+  },
+  {
+    "id": "cultural_004",
+    "category": "cultural",
+    "sub_category": "greetings",
+    "situation": "physical_greetings",
+    "rwanda_context": "There is no one standard greeting in Rwanda. A 'full hobera' (full embrace with back-slapping) is reserved for family or close friends. A head rub (rubbing temples together) is for respected people of a similar level.",
+    "suggested_tip": "For general acquaintances, a double handshake (clasping both hands) is safe and respectful, or a single firm handshake. A limp handshake is a sign of reluctance."
+  },
+  {
+    "id": "cultural_005",
+    "category": "cultural",
+    "sub_category": "environment",
+    "situation": "plastic_ban",
+    "rwanda_context": "The use of plastic carry bags is strictly prohibited in Rwanda by law and a strong national commitment to environmental protection.",
+    "suggested_tip": "Do not bring plastic bags into the country; they will be confiscated at the airport. Use reusable bags when shopping."
+  },
+  {
+    "id": "cultural_006",
+    "category": "cultural",
+    "sub_category": "environment",
+    "situation": "umuganda",
+    "rwanda_context": "On the last Saturday of every month, Rwandans participate in Umuganda, a mandatory community service activity from 8 AM to 11 AM.",
+    "suggested_tip": "Expect limited business hours and reduced traffic on Umuganda mornings. It is a sign of respect to stay off the roads unless you are participating."
+  },
+  {
+    "id": "cultural_007",
+    "category": "cultural",
+    "sub_category": "dress_code",
+    "situation": "modest_dressing",
+    "rwanda_context": "Modest dress is valued in Rwanda, especially in rural areas and when visiting villages, churches, and memorials.",
+    "suggested_tip": "Wear clothing that covers your shoulders and knees when visiting churches, memorials, or traditional ceremonies. In Kigali's modern areas, neat casual is fine, but modesty is still appreciated."
+  },
+  {
+    "id": "cultural_008",
+    "category": "cultural",
+    "sub_category": "photography",
+    "situation": "photography_etiquette",
+    "rwanda_context": "Rwanda's landscapes are very photogenic, but taking photos without consent can be intrusive and is discouraged. At genocide memorials, the expectation is to move slowly and respectfully in silence.",
+    "suggested_tip": "Always ask permission before photographing people and show them the picture afterward. In some areas, subjects may expect a small payment for a photo. Keep your phone silent at memorials."
+  },
+  {
+    "id": "cultural_009",
+    "category": "cultural",
+    "sub_category": "language",
+    "situation": "kinyarwanda_phrases",
+    "rwanda_context": "Rwandans appreciate it when foreigners make an effort to speak a few words of Kinyarwanda.",
+    "suggested_tip": "Learn and use 'Muraho' (Hello), 'Amakuru?' (How are you?), 'Ni meza' (I'm fine), 'Murakoze' (Thank you), and 'Mwirirwe' (Good afternoon)."
+  },
+  {
+    "id": "cultural_010",
+    "category": "cultural",
+    "sub_category": "social_norms",
+    "situation": "politeness",
+    "rwanda_context": "Rwandans are known for their politeness and respect. A woman's privacy and modesty are highly valued.",
+    "suggested_tip": "Let women and elders go first when entering a room, boarding a vehicle, or going up stairs. Avoid overly aggressive or loud behavior in public."
+  },{
+    "id": "restaurant_001",
+    "category": "restaurant",
+    "sub_category": "greetings",
+    "situation": "greeting_on_arrival",
+    "rwanda_context": "In Rwanda, greetings matter a lot. When entering a restaurant in Kigali, it is polite to greet the staff first before asking for anything. A simple 'Muraho' (hello) or 'Mwaramutse' (good morning) is warmly received.",
+    "suggested_tip": "Greet the staff with 'Muraho' before ordering - starting with a greeting is expected and appreciated."
+  },
+  {
+    "id": "restaurant_002",
+    "category": "restaurant",
+    "sub_category": "greetings",
+    "situation": "thanking_staff",
+    "rwanda_context": "In Rwanda, saying thank you is an important sign of respect. 'Murakoze' is the standard way to thank waitstaff after being served or when leaving a restaurant.",
+    "suggested_tip": "Say 'Murakoze' (thank you) to your waiter after being served - it goes a long way in Rwandan culture."
+  },
+  {
+    "id": "restaurant_003",
+    "category": "restaurant",
+    "sub_category": "ordering",
+    "situation": "asking_for_menu",
+    "rwanda_context": "In many local Kigali restaurants, a printed menu may not always be offered upfront, and daily dishes can vary. It is normal to ask the waiter what is available today ('Ni ibiki mufite uyu munsi?').",
+    "suggested_tip": "Ask the waiter what is available today rather than expecting a printed menu - daily offerings often change in local spots."
+  },
+  {
+    "id": "restaurant_004",
+    "category": "restaurant",
+    "sub_category": "ordering",
+    "situation": "ordering_melange",
+    "rwanda_context": "In Kigali, 'melange' (or 'buffet') is the most common lunch option - a single fixed-price plate where you get a mix of rice, beans, plantains, cassava, vegetables, and often a piece of meat. It is usually served self-service from a buffet line.",
+    "suggested_tip": "Order the 'melange' for lunch - it is a fixed-price mixed plate and the most popular, affordable local meal."
+  },
+  {
+    "id": "restaurant_005",
+    "category": "restaurant",
+    "sub_category": "buffet",
+    "situation": "self_service_rules",
+    "rwanda_context": "At a Kigali melange buffet, you typically take a plate and serve yourself once from the available dishes at a single fixed price. The plate is usually weighed or priced as one serving, not per item.",
+    "suggested_tip": "Serve yourself a full plate in one go at the buffet - the melange is one fixed price, so load your plate the first time."
+  },
+  {
+    "id": "restaurant_006",
+    "category": "restaurant",
+    "sub_category": "buffet",
+    "situation": "going_back_for_seconds",
+    "rwanda_context": "In most Kigali buffet restaurants, the melange price covers a single plate. Going back for a second full plate may be charged again, though some places allow topping up sauce or beans freely.",
+    "suggested_tip": "Check with staff before going back for seconds - a second full plate is often charged as a new melange."
+  },
+  {
+    "id": "restaurant_007",
+    "category": "restaurant",
+    "sub_category": "brochettes",
+    "situation": "ordering_brochettes",
+    "rwanda_context": "Brochettes (grilled meat skewers, usually goat, beef, or chicken) are a Kigali favorite, often ordered by the number of sticks and served with grilled or fried plantains, potatoes, or 'agatogo'. They are commonly enjoyed in the evening with a drink.",
+    "suggested_tip": "Order brochettes by the number of skewers you want (e.g. 'three goat brochettes') - they are usually priced per stick."
+  },
+  {
+    "id": "restaurant_008",
+    "category": "restaurant",
+    "sub_category": "brochettes",
+    "situation": "eating_with_hands",
+    "rwanda_context": "In Rwanda, eating brochettes, grilled plantains, or chips with your hands is completely normal and expected, even in casual restaurants. Hands are usually washed before the meal.",
+    "suggested_tip": "It is normal to eat brochettes and grilled plantains with your hands - just wash your hands first."
+  },
+  {
+    "id": "restaurant_009",
+    "category": "restaurant",
+    "sub_category": "drinks",
+    "situation": "ordering_soft_drink",
+    "rwanda_context": "In Rwanda, 'Fanta' is often used as a general word for any bottled soft drink, not just the orange brand. If you ask for a Fanta, the waiter may ask which one (Coca, Sprite, Fanta Citron, etc.).",
+    "suggested_tip": "When ordering a soft drink, name the specific one you want - 'Fanta' is used locally to mean any soda."
+  },
+  {
+    "id": "restaurant_010",
+    "category": "restaurant",
+    "sub_category": "drinks",
+    "situation": "ordering_water",
+    "rwanda_context": "In Kigali restaurants, water is not usually served automatically and you order bottled water ('amazi'), which comes still or sparkling. Tap water is generally not served at the table.",
+    "suggested_tip": "Order bottled water ('amazi') if you want water - it is not served automatically, and specify still or sparkling."
+  },
+  {
+    "id": "restaurant_011",
+    "category": "restaurant",
+    "sub_category": "drinks",
+    "situation": "ordering_local_beer",
+    "rwanda_context": "Rwanda has popular local beers such as Primus, Mutzig, Skol, and Turbo King, usually served in large bottles. Ordering a cold local beer with brochettes is a common evening experience in Kigali.",
+    "suggested_tip": "Try a local beer like Primus or Mutzig with your brochettes - they are served in large bottles and widely available."
+  },
+  {
+    "id": "restaurant_012",
+    "category": "restaurant",
+    "sub_category": "drinks",
+    "situation": "ordering_tea",
+    "rwanda_context": "Rwandan tea ('icyayi') is often served as milk tea, sometimes spiced with ginger, and is popular at breakfast alongside chapati or mandazi. Black tea ('icyayi cy'amazi') is also available if you prefer no milk.",
+    "suggested_tip": "Specify milk tea or black tea when ordering - Rwandan tea is commonly served with milk and sometimes ginger."
+  },
+  {
+    "id": "restaurant_013",
+    "category": "restaurant",
+    "sub_category": "payment",
+    "situation": "mobile_money_payment",
+    "rwanda_context": "In Kigali, Mobile Money (MTN MoMo and Airtel Money) is widely accepted in restaurants, often by dialing a code and sending payment to the restaurant's number or scanning a MoMo code. It is a fast, common alternative to cash.",
+    "suggested_tip": "Ask if you can pay by Mobile Money (MoMo) - most Kigali restaurants accept it and it is faster than cash."
+  },
+  {
+    "id": "restaurant_014",
+    "category": "restaurant",
+    "sub_category": "payment",
+    "situation": "ebm_receipt",
+    "rwanda_context": "In Rwanda, registered businesses are required to issue an EBM (Electronic Billing Machine) receipt for VAT purposes. It is normal and expected to receive one, and you can politely ask for it if it is not offered.",
+    "suggested_tip": "Ask for an EBM receipt when you pay - restaurants are legally required to provide one in Rwanda."
+  },
+  {
+    "id": "restaurant_015",
+    "category": "restaurant",
+    "sub_category": "payment",
+    "situation": "cash_small_change",
+    "rwanda_context": "In Kigali, prices are in Rwandan Francs (RWF), and small local restaurants may not have change for large notes. Carrying smaller notes and coins makes paying easier, especially in casual eateries.",
+    "suggested_tip": "Carry smaller RWF notes for casual restaurants - small local spots often struggle to break large bills."
+  },
+  {
+    "id": "restaurant_016",
+    "category": "restaurant",
+    "sub_category": "payment",
+    "situation": "splitting_the_bill",
+    "rwanda_context": "In Rwanda, one person often pays for the whole table, especially if they invited the others, and splitting the bill item-by-item is less common in casual settings. However, in Kigali's international restaurants, splitting is generally understood.",
+    "suggested_tip": "If you want to split the bill, mention it early - in Rwanda it is common for one person to pay for the group."
+  },
+  {
+    "id": "restaurant_017",
+    "category": "restaurant",
+    "sub_category": "tipping",
+    "situation": "tipping_norm",
+    "rwanda_context": "In Rwanda, tipping is not mandatory and is not built into the culture the way it is elsewhere, but leaving small change or rounding up the bill is appreciated for good service, especially in Kigali's tourist-facing restaurants.",
+    "suggested_tip": "Tipping is optional in Rwanda - rounding up or leaving small change is a kind gesture but not expected."
+  },
+  {
+    "id": "restaurant_018",
+    "category": "restaurant",
+    "sub_category": "hygiene",
+    "situation": "handwashing_before_meal",
+    "rwanda_context": "In Rwanda, washing hands before eating is an important custom. Many restaurants provide a handwashing station, or a waiter may bring a jug of water and a basin to your table, especially before meals eaten by hand.",
+    "suggested_tip": "Wash your hands before the meal - use the handwashing station or the jug and basin the waiter brings to the table."
+  },
+  {
+    "id": "restaurant_019",
+    "category": "restaurant",
+    "sub_category": "hygiene",
+    "situation": "restaurant_cleanliness",
+    "rwanda_context": "Rwanda places a strong emphasis on cleanliness, and Kigali restaurants are generally expected to maintain high hygiene standards. Cleanliness is a point of national pride, reinforced by regular inspections.",
+    "suggested_tip": "Expect clean facilities in Kigali restaurants - hygiene is taken seriously and is a source of national pride."
+  },
+  {
+    "id": "restaurant_020",
+    "category": "restaurant",
+    "sub_category": "etiquette",
+    "situation": "waiting_to_be_seated",
+    "rwanda_context": "In casual Kigali restaurants, you can usually seat yourself, while more upscale or international venues may have a host who seats you. When unsure, it is fine to ask or catch a waiter's attention.",
+    "suggested_tip": "In casual spots you can seat yourself, but wait to be seated at upscale restaurants - ask if you are unsure."
+  },
+  {
+    "id": "restaurant_021",
+    "category": "restaurant",
+    "sub_category": "etiquette",
+    "situation": "calling_the_waiter",
+    "rwanda_context": "In Rwanda, it is polite to get a waiter's attention with eye contact, a small raise of the hand, or a soft 'excuse me' ('mwihanganire'). Snapping fingers or loud calling is considered rude.",
+    "suggested_tip": "Get the waiter's attention with a raised hand or 'mwihanganire' - avoid snapping or calling out loudly."
+  },
+  {
+    "id": "restaurant_022",
+    "category": "restaurant",
+    "sub_category": "dietary",
+    "situation": "vegetarian_options",
+    "rwanda_context": "Rwandan melange buffets are naturally vegetable-heavy, with beans, plantains, cassava, sweet potatoes, rice, and greens, so vegetarians can eat well by simply skipping the meat portion. Purely vegetarian restaurants are less common but plant-based sides are everywhere.",
+    "suggested_tip": "Vegetarians can build a full plate from the melange - beans, plantains, cassava and greens are widely available."
+  },
+  {
+    "id": "restaurant_023",
+    "category": "restaurant",
+    "sub_category": "dietary",
+    "situation": "halal_food",
+    "rwanda_context": "In Kigali, halal food is available, particularly in areas like Nyamirambo which has a strong Muslim community and many halal eateries. Elsewhere it helps to ask whether meat is halal before ordering.",
+    "suggested_tip": "For halal meals, look in Nyamirambo or ask if the meat is halal - it is available but not standard everywhere."
+  },
+  {
+    "id": "restaurant_024",
+    "category": "restaurant",
+    "sub_category": "dietary",
+    "situation": "allergy_communication",
+    "rwanda_context": "In local Kigali restaurants, detailed allergen labeling is uncommon, so it is important to clearly tell the waiter about any allergies. Common ingredients include peanuts (in some sauces), dairy in tea, and gluten in chapati and bread.",
+    "suggested_tip": "Clearly state any allergies to the waiter - allergen labels are rare, so ask what is in a dish before ordering."
+  },
+  {
+    "id": "restaurant_025",
+    "category": "restaurant",
+    "sub_category": "menu_items",
+    "situation": "understanding_isombe",
+    "rwanda_context": "'Isombe' is a popular Rwandan dish made from mashed cassava leaves, often cooked with eggplant, spinach, palm oil, and sometimes peanuts or dried fish. It is a common part of the melange plate.",
+    "suggested_tip": "Try 'isombe' - a tasty mashed cassava-leaf dish, but ask about peanuts or dried fish if you have concerns."
+  },
+  {
+    "id": "restaurant_026",
+    "category": "restaurant",
+    "sub_category": "menu_items",
+    "situation": "understanding_ugali",
+    "rwanda_context": "'Ubugali' (ugali) is a thick, dough-like staple made from cassava or maize flour, eaten with sauce, beans, or meat. It is typically eaten with the hands by pinching off a piece and dipping it.",
+    "suggested_tip": "'Ubugali' is a dense cassava or maize staple - eat it by pinching a piece with your hand and dipping in sauce."
+  },
+  {
+    "id": "restaurant_027",
+    "category": "restaurant",
+    "sub_category": "menu_items",
+    "situation": "understanding_ibitoke",
+    "rwanda_context": "'Ibitoke' are cooking plantains, a staple in Rwanda, usually boiled, steamed, or grilled. They can be part of a melange, cooked into a stew called 'agatogo', or grilled alongside brochettes.",
+    "suggested_tip": "'Ibitoke' are cooking plantains - mild and filling, they pair well with brochettes or come in the melange."
+  },
+  {
+    "id": "restaurant_028",
+    "category": "restaurant",
+    "sub_category": "menu_items",
+    "situation": "understanding_agatogo",
+    "rwanda_context": "'Agatogo' is a hearty Rwandan stew of plantains cooked with meat, vegetables, and sometimes offal in a rich sauce. It is a comforting local dish often eaten as a main.",
+    "suggested_tip": "'Agatogo' is a rich plantain-and-meat stew - order it as a filling main and ask what meat is used if unsure."
+  },
+  {
+    "id": "restaurant_029",
+    "category": "restaurant",
+    "sub_category": "pricing",
+    "situation": "expected_meal_cost",
+    "rwanda_context": "In Kigali, a local melange buffet lunch is usually affordable, while international and hotel restaurants cost noticeably more. Prices are always in Rwandan Francs (RWF), and local eateries offer the best value.",
+    "suggested_tip": "Expect local melange lunches to be budget-friendly - international and hotel restaurants cost significantly more."
+  },
+  {
+    "id": "restaurant_030",
+    "category": "restaurant",
+    "sub_category": "pricing",
+    "situation": "confirming_price_before_ordering",
+    "rwanda_context": "In smaller Kigali eateries without printed menus, prices may not be displayed, so it is reasonable to ask the cost before ordering to avoid surprises. Most local prices are fixed and fair, not negotiable like at a market.",
+    "suggested_tip": "Ask the price before ordering where menus aren't posted - restaurant prices are fixed, not bargained like at markets."
+  },
+  {
+    "id": "restaurant_031",
+    "category": "restaurant",
+    "sub_category": "timing",
+    "situation": "lunch_hours",
+    "rwanda_context": "In Kigali, the melange buffet is mainly a lunchtime meal, typically served between about noon and 2 or 3 pm. Arriving too late may mean the buffet dishes are finished or picked over.",
+    "suggested_tip": "Go for the melange buffet around noon to 2 pm - arrive early for the best selection before dishes run out."
+  },
+  {
+    "id": "restaurant_032",
+    "category": "restaurant",
+    "sub_category": "timing",
+    "situation": "dinner_timing",
+    "rwanda_context": "In Kigali, dinner is often eaten later in the evening, and brochette-and-beer spots stay lively into the night. Some local restaurants may serve a smaller evening menu than at lunch.",
+    "suggested_tip": "For dinner, brochette spots are lively into the evening - but expect a smaller menu than the lunchtime buffet."
+  },
+  {
+    "id": "restaurant_033",
+    "category": "restaurant",
+    "sub_category": "reservations",
+    "situation": "booking_ahead",
+    "rwanda_context": "For popular or upscale restaurants in Kigali, especially on weekends, it helps to reserve ahead by phone or WhatsApp. Casual local eateries generally do not require reservations.",
+    "suggested_tip": "Reserve ahead by phone or WhatsApp for popular Kigali restaurants - casual local spots don't need a booking."
+  },
+  {
+    "id": "restaurant_034",
+    "category": "restaurant",
+    "sub_category": "reservations",
+    "situation": "large_group",
+    "rwanda_context": "When dining with a large group in Kigali, it is best to call ahead so the restaurant can prepare, especially for melange or brochettes which may need time. Some places set a group menu in advance.",
+    "suggested_tip": "Call ahead for large groups so the kitchen can prepare - brochettes and big orders take time to cook."
+  },
+  {
+    "id": "restaurant_035",
+    "category": "restaurant",
+    "sub_category": "takeaway",
+    "situation": "no_plastic_bags",
+    "rwanda_context": "Rwanda has a strict nationwide ban on single-use plastic bags. Restaurants package takeaway food in paper or reusable containers, so do not expect a plastic bag for your leftovers or takeout.",
+    "suggested_tip": "Don't expect plastic bags for takeaway - Rwanda bans them, so bring a reusable container, aluminium foil or accept paper packaging."
+  },
+  {
+    "id": "restaurant_036",
+    "category": "restaurant",
+    "sub_category": "takeaway",
+    "situation": "packaging_leftovers",
+    "rwanda_context": "In Kigali, asking to pack leftovers ('gutwara') is acceptable in many restaurants, though it is more common in international venues than in traditional buffet spots. Containers are paper, aluminium foils or plastic tubs, never plastic bags.",
+    "suggested_tip": "You can ask to pack leftovers to take home - it is accepted, and containers will be paper, aluminium foils or a reusable tub."
+  },
+  {
+    "id": "restaurant_037",
+    "category": "restaurant",
+    "sub_category": "coffee",
+    "situation": "rwandan_coffee_culture",
+    "rwanda_context": "Rwanda produces world-renowned specialty coffee, and Kigali has a growing cafe scene serving locally grown beans. Trying a Rwandan-grown coffee at a cafe like Question Coffee or a neighborhood roaster is a highlight for visitors.",
+    "suggested_tip": "Try locally grown Rwandan coffee at a Kigali cafe - the country is famous for high-quality specialty beans."
+  },
+  {
+    "id": "restaurant_038",
+    "category": "restaurant",
+    "sub_category": "smoking",
+    "situation": "no_smoking_rule",
+    "rwanda_context": "Rwanda enforces strict no-smoking rules in indoor public places, including restaurants. Smoking is only allowed in designated outdoor areas, and lighting up at the table is not permitted.",
+    "suggested_tip": "Do not smoke inside restaurants - Rwanda bans indoor smoking, so use designated outdoor areas only."
+  },
+  {
+    "id": "restaurant_039",
+    "category": "restaurant",
+    "sub_category": "special_period",
+    "situation": "kwibuka_commemoration",
+    "rwanda_context": "During Kwibuka, the annual genocide commemoration period beginning April 7, the national mood is solemn, especially in the first week. Some restaurants play no loud music and the atmosphere is quieter out of respect.",
+    "suggested_tip": "Expect a quieter, music-free atmosphere in restaurants during the Kwibuka commemoration period in April - be respectful."
+  },
+  {
+    "id": "restaurant_040",
+    "category": "restaurant",
+    "sub_category": "special_period",
+    "situation": "umuganda_morning",
+    "rwanda_context": "On the last Saturday of each month, Rwanda holds Umuganda, a mandatory community-service morning, and many businesses including restaurants open later, typically around 11 am to noon. Movement is limited during the morning hours.",
+    "suggested_tip": "On the last Saturday of the month (Umuganda), expect restaurants to open around late morning - plan meals for after 11 am."
+  },
+  {
+    "id": "restaurant_041",
+    "category": "restaurant",
+    "sub_category": "language",
+    "situation": "basic_phrases_ordering",
+    "rwanda_context": "In Rwanda, a few Kinyarwanda phrases go a long way in restaurants. 'Ndashaka' means 'I want', 'Nshaka kurya' means 'I want to eat', and pointing politely at dishes is common when there is a language gap.",
+    "suggested_tip": "Learn 'Ndashaka' ('I want') to order - a few Kinyarwanda words plus polite pointing bridge most language gaps."
+  },
+  {
+    "id": "restaurant_042",
+    "category": "restaurant",
+    "sub_category": "language",
+    "situation": "asking_for_bill",
+    "rwanda_context": "To ask for the bill in a Rwandan restaurant, you can say 'Fagitire' (the bill) or 'Ni angahe?' meaning 'how much is it?'. Making a small writing gesture in the air is also widely understood.",
+    "suggested_tip": "Ask for the bill by saying 'Fagitire?' or 'Ni angahe?' ('how much?') - a writing gesture also works."
+  },
+  {
+    "id": "restaurant_043",
+    "category": "restaurant",
+    "sub_category": "service",
+    "situation": "service_pace",
+    "rwanda_context": "In many Kigali restaurants, especially those cooking melange or brochettes fresh, service can be relaxed and unhurried. Food may take time, so patience is expected rather than rushing the staff.",
+    "suggested_tip": "Be patient with service - freshly cooked brochettes and local dishes take time, and rushing staff is seen as impolite."
+  },
+  {
+    "id": "restaurant_044",
+    "category": "restaurant",
+    "sub_category": "service",
+    "situation": "water_not_default",
+    "rwanda_context": "Unlike in some countries, Kigali restaurants do not automatically bring free water or bread to the table. Anything you want, including water, is ordered and usually appears on the bill.",
+    "suggested_tip": "Order water or anything else you want explicitly - nothing is brought free by default, and it appears on the bill."
+  },
+  {
+    "id": "restaurant_045",
+    "category": "restaurant",
+    "sub_category": "etiquette",
+    "situation": "sharing_food",
+    "rwanda_context": "In Rwandan culture, sharing food is a sign of hospitality and friendship, and it is common for a table to share brochettes, plantains, and sides communally. Offering to share is a warm, welcomed gesture.",
+    "suggested_tip": "Feel free to share brochettes and sides with your table - communal eating is a warm part of Rwandan hospitality."
+  },
+  {
+    "id": "restaurant_046",
+    "category": "restaurant",
+    "sub_category": "drinks",
+    "situation": "alcohol_customs",
+    "rwanda_context": "Alcohol is widely available in Kigali restaurants and bars, but public drunkenness is frowned upon and driving after drinking is strictly enforced with breathalyzer checks. Drinking responsibly is expected socially and legally.",
+    "suggested_tip": "Enjoy a drink responsibly - Rwanda enforces strict drink-driving checks, so arrange a moto or taxi if you drink."
+  },
+  {
+    "id": "restaurant_047",
+    "category": "restaurant",
+    "sub_category": "ordering",
+    "situation": "spice_level",
+    "rwanda_context": "Rwandan food is generally mild rather than heavily spiced, and heat usually comes from 'akabanga', a potent local chili oil served on the side. You add it yourself to control the spice level.",
+    "suggested_tip": "Rwandan food is mild - add the local chili oil 'akabanga' yourself, a few drops at a time, as it is very hot."
+  },
+  {
+    "id": "restaurant_048",
+    "category": "restaurant",
+    "sub_category": "hygiene",
+    "situation": "tap_water_safety",
+    "rwanda_context": "In Kigali, tap water is not generally recommended for drinking by visitors, which is why restaurants serve bottled water. Ice and fresh juices in reputable restaurants are usually made with treated or bottled water.",
+    "suggested_tip": "Drink bottled water rather than tap in Kigali - it is why restaurants serve 'amazi' in sealed bottles."
+  },
+  {
+    "id": "restaurant_049",
+    "category": "restaurant",
+    "sub_category": "menu_items",
+    "situation": "understanding_akabenz",
+    "rwanda_context": "'Akabenz' refers to fried or grilled pork, a beloved specialty in Kigali eaten at dedicated pork joints, often with grilled plantains and a drink. It is popular for casual evening gatherings.",
+    "suggested_tip": "Try 'akabenz' (grilled pork) at a dedicated pork joint - a popular casual evening dish served with plantains."
+  },
+  {
+    "id": "restaurant_050",
+    "category": "restaurant",
+    "sub_category": "etiquette",
+    "situation": "dress_and_conduct",
+    "rwanda_context": "Rwandans generally dress neatly and value respectful, calm conduct in public places including restaurants. Smart-casual dress is appreciated at nicer Kigali venues, and loud or disruptive behavior is uncommon.",
+    "suggested_tip": "Dress neatly and keep a calm tone in restaurants - Rwandans value tidy appearance and respectful public conduct."
+  },{
+    "id": "marketplace_001",
+    "category": "marketplace",
+    "sub_category": "greetings",
+    "situation": "greeting_before_bargaining",
+    "rwanda_context": "In Rwanda, greeting a vendor before discussing price is important and sets a friendly tone. A quick 'Muraho' (hello) or 'Mwaramutse' (good morning) before asking about goods makes the whole interaction warmer and often smoother.",
+    "suggested_tip": "Greet the vendor with 'Muraho' before asking about prices. Starting with a greeting is expected and helps bargaining."
+  },
+  {
+    "id": "marketplace_002",
+    "category": "marketplace",
+    "sub_category": "bargaining",
+    "situation": "bargaining_expected_at_markets",
+    "rwanda_context": "At open-air markets in Kigali like Kimironko or Nyabugogo, bargaining is normal and expected for produce, fabric, crafts, and secondhand goods. The first price quoted is usually a starting point, not the final price.",
+    "suggested_tip": "Bargain politely at open markets. The first price is a starting point, and negotiating is a normal part of shopping."
+  },
+  {
+    "id": "marketplace_003",
+    "category": "marketplace",
+    "sub_category": "bargaining",
+    "situation": "making_a_counter_offer",
+    "rwanda_context": "When bargaining in Kigali markets, it is common to counter the first price with a lower but reasonable offer, then settle somewhere in the middle. Offering far too little can be seen as disrespectful, so aim for a fair counter.",
+    "suggested_tip": "Counter the first price with a reasonable lower offer, then meet in the middle to avoid lowballing, which seems rude."
+  },
+  {
+    "id": "marketplace_004",
+    "category": "marketplace",
+    "sub_category": "bargaining",
+    "situation": "walk_away_tactic",
+    "rwanda_context": "In Kigali markets, politely starting to walk away is a common and accepted bargaining move. If the vendor's price has room, they will often call you back with a lower offer; if not, the price was likely already fair.",
+    "suggested_tip": "If the price feels high, politely begin to walk away. A vendor with room to move will often call you back with a better price."
+  },
+  {
+    "id": "marketplace_005",
+    "category": "marketplace",
+    "sub_category": "bargaining",
+    "situation": "staying_friendly",
+    "rwanda_context": "Bargaining in Rwanda is meant to be good-natured, not aggressive. Keeping a smile, being patient, and treating it as friendly back-and-forth gets better results than being pushy or confrontational.",
+    "suggested_tip": "Keep bargaining friendly and smiling with a warm, patient tone gets you a better price than being pushy in Rwanda."
+  },
+  {
+    "id": "marketplace_006",
+    "category": "marketplace",
+    "sub_category": "supermarket",
+    "situation": "fixed_prices_no_bargaining",
+    "rwanda_context": "In Kigali supermarkets like Simba, Sawa Citi, or those in malls, prices are fixed and clearly labeled, so bargaining is not done. Haggling is only for open markets and informal vendors, not formal shops.",
+    "suggested_tip": "Do not bargain in supermarkets, prices there are fixed and labeled, unlike open markets where negotiating is normal."
+  },
+  {
+    "id": "marketplace_007",
+    "category": "marketplace",
+    "sub_category": "supermarket",
+    "situation": "bag_check_at_entrance",
+    "rwanda_context": "Many Kigali supermarkets ask you to leave large bags or backpacks at a security counter near the entrance, giving you a token to reclaim them. This is a routine security measure, not a sign of suspicion.",
+    "suggested_tip": "Expect to leave large bags at the entrance counter in supermarkets. It is routine security, and you get a token to reclaim them."
+  },
+  {
+    "id": "marketplace_008",
+    "category": "marketplace",
+    "sub_category": "pricing",
+    "situation": "tourist_pricing_awareness",
+    "rwanda_context": "At Kigali markets, foreign visitors are sometimes quoted higher opening prices. Knowing the rough local price beforehand, or asking a local friend, helps you negotiate fairly rather than paying an inflated 'visitor' rate.",
+    "suggested_tip": "Learn the rough local price first, visitors are sometimes quoted higher, so a known reference helps you negotiate fairly."
+  },
+  {
+    "id": "marketplace_009",
+    "category": "marketplace",
+    "sub_category": "pricing",
+    "situation": "asking_the_price",
+    "rwanda_context": "The key phrase for shopping in Rwanda is 'Ni angahe?' meaning 'how much is it?'. Prices are always in Rwandan Francs (RWF), and vendors will state the amount, which you can then discuss at open markets.",
+    "suggested_tip": "Ask 'Ni angahe?' ('how much?') to get a price, amounts are in Rwandan Francs (RWF)."
+  },
+  {
+    "id": "marketplace_010",
+    "category": "marketplace",
+    "sub_category": "payment",
+    "situation": "mobile_money_payment",
+    "rwanda_context": "Mobile Money (MTN MoMo and Airtel Money) is widely used across Kigali, even by small market vendors and MoMo agents on nearly every corner. Many sellers prefer it, and you can pay by sending to their number.",
+    "suggested_tip": "Ask if the vendor takes Mobile Money (MoMo)  even if many market sellers accept it, and agents are on almost every corner."
+  },
+  {
+    "id": "marketplace_011",
+    "category": "marketplace",
+    "sub_category": "payment",
+    "situation": "carrying_small_change",
+    "rwanda_context": "At Kigali markets, small vendors often cannot break large RWF notes. Carrying smaller notes and coins makes buying produce and small items much easier and avoids waiting while they search for change.",
+    "suggested_tip": "Carry small RWF notes and coins at market  vendors often can't break large bills for small purchases."
+  },
+  {
+    "id": "marketplace_012",
+    "category": "marketplace",
+    "sub_category": "payment",
+    "situation": "ebm_receipt_supermarket",
+    "rwanda_context": "In Rwanda, supermarkets and registered shops issue EBM (Electronic Billing Machine) receipts for VAT. You automatically get one at the till, and it is worth keeping for returns or expense records. Open-market vendors usually do not issue receipts.",
+    "suggested_tip": "Keep the EBM receipt from the supermarket till  it is your VAT record; informal market vendors won't provide one."
+  },
+  {
+    "id": "marketplace_013",
+    "category": "marketplace",
+    "sub_category": "plastic_bags",
+    "situation": "bring_your_own_bag",
+    "rwanda_context": "Rwanda has a strict ban on single-use plastic bags, so shops and markets provide paper bags, reusable bags, or none at all. Bringing your own reusable shopping bag or basket is the norm and very convenient.",
+    "suggested_tip": "Bring a reusable bag or basket when shopping. Rwanda bans plastic bags, so vendors won't hand you one."
+  },
+  {
+    "id": "marketplace_014",
+    "category": "marketplace",
+    "sub_category": "produce",
+    "situation": "buying_by_heap_or_kilo",
+    "rwanda_context": "At Kigali markets, produce is often sold in small heaps ('piles') at a set price per heap, or by the kilo for items like tomatoes and potatoes. You can ask to buy a heap or request a specific weight.",
+    "suggested_tip": "Produce is sold by the heap or by the kilo  you can buy a ready-made pile or ask for a specific weight."
+  },
+  {
+    "id": "marketplace_015",
+    "category": "marketplace",
+    "sub_category": "produce",
+    "situation": "buying_avocados",
+    "rwanda_context": "Avocados in Rwanda are large, creamy, abundant, and very cheap compared to many countries. They are a market staple, and you can often get several big ones for a small amount, especially in season.",
+    "suggested_tip": "Buy avocados generously. They are large, cheap, and excellent in Rwanda, often several for a small price."
+  },
+  {
+    "id": "marketplace_016",
+    "category": "marketplace",
+    "sub_category": "produce",
+    "situation": "banana_types",
+    "rwanda_context": "Rwanda has many banana varieties, and they are not interchangeable. 'Ibitoke' are green cooking plantains used in stews, while sweet dessert bananas ('imineke') are for eating raw. Vendors can point you to the right kind.",
+    "suggested_tip": "Specify cooking bananas ('ibitoke') or sweet bananas ('imineke')  . Rwanda's many banana types are used very differently."
+  },
+  {
+    "id": "marketplace_017",
+    "category": "marketplace",
+    "sub_category": "produce",
+    "situation": "buying_tropical_fruit",
+    "rwanda_context": "Kigali markets offer excellent tropical fruit such as passion fruit ('maracuja'), tree tomatoes ('igishinge'), pineapples, mangoes, and papaya. These are fresh, cheap, and often sold in heaps, making them great value.",
+    "suggested_tip": "Try local passion fruit ('maracuja') and tree tomatoes. Tropical fruit is fresh, cheap, and abundant at Kigali markets."
+  },
+  {
+    "id": "marketplace_018",
+    "category": "marketplace",
+    "sub_category": "produce",
+    "situation": "checking_freshness",
+    "rwanda_context": "At Kigali markets, it is acceptable to gently inspect produce for freshness before buying, but handling it too roughly or squeezing every piece is considered impolite. A light, respectful check is fine.",
+    "suggested_tip": "Gently check produce for freshness before buying  but avoid squeezing everything, which vendors find disrespectful."
+  },
+  {
+    "id": "marketplace_019",
+    "category": "marketplace",
+    "sub_category": "fabric",
+    "situation": "buying_igitenge",
+    "rwanda_context": "'Igitenge' (also called kitenge) is the colorful printed fabric widely sold at Kigali markets like Kimironko. It is used for clothing, headwraps, and decor, and each design has bold patterns. Bargaining on fabric is normal.",
+    "suggested_tip": "Shop for colorful 'igitenge' fabric at markets like Kimironko. It is great for clothing, and you can bargain on the price."
+  },
+  {
+    "id": "marketplace_020",
+    "category": "marketplace",
+    "sub_category": "fabric",
+    "situation": "fabric_sold_by_length",
+    "rwanda_context": "Igitenge is usually sold as a set piece of a standard length (often around six yards), enough for a full outfit, rather than by the meter you choose freely. Confirm the length you are getting before agreeing on a price.",
+    "suggested_tip": "Confirm the fabric length before buying  igitenge is usually sold as a fixed piece (about six yards), enough for an outfit."
+  },
+  {
+    "id": "marketplace_021",
+    "category": "marketplace",
+    "sub_category": "tailoring",
+    "situation": "getting_clothes_made",
+    "rwanda_context": "In Kigali, it is common to buy igitenge fabric and take it to a tailor, many of whom work right inside or near markets like Kimironko. They can make custom clothing quickly and affordably from your chosen fabric.",
+    "suggested_tip": "Buy fabric and take it to a market tailor to make custom clothing. It is affordable and common in Kigali."
+  },
+  {
+    "id": "marketplace_022",
+    "category": "marketplace",
+    "sub_category": "second_hand_clothes",
+    "situation": "buying_secondhand_clothing",
+    "rwanda_context": "Secondhand clothing markets (locally called 'caguwa') are very popular in Rwanda and offer quality items at low prices. Digging through piles to find good pieces is part of the experience, and prices are negotiable.",
+    "suggested_tip": "Explore secondhand ('caguwa') clothing stalls for cheap quality finds, dig through the piles and bargain on price."
+  },
+  {
+    "id": "marketplace_023",
+    "category": "marketplace",
+    "sub_category": "crafts",
+    "situation": "buying_souvenirs",
+    "rwanda_context": "For souvenirs and crafts in Kigali, places like the Caplaki Craft Village and market craft sections sell woodwork, art, jewelry, and textiles. Bargaining is expected at these stalls, and buying a few items can earn a discount.",
+    "suggested_tip": "Shop for souvenirs at craft spots like Caplaki Craft Village  bargaining is expected, and buying several items earns a discount."
+  },
+  {
+    "id": "marketplace_024",
+    "category": "marketplace",
+    "sub_category": "crafts",
+    "situation": "buying_agaseke_baskets",
+    "rwanda_context": "'Agaseke' are Rwanda's iconic handwoven peace baskets, a national symbol and a popular, meaningful souvenir. They are sold in craft markets in various sizes and colors, made by local weaving cooperatives.",
+    "suggested_tip": "Consider an 'agaseke' woven basket as a souvenir; it is a Rwandan national symbol and a meaningful, locally made gift."
+  },
+  {
+    "id": "marketplace_025",
+    "category": "marketplace",
+    "sub_category": "meat",
+    "situation": "buying_from_butchery",
+    "rwanda_context": "Meat in Rwanda is bought at butcheries ('aho bagurisha inyama') and sold by the kilo, cut fresh to order. You can specify the type (goat, beef, chicken) and the amount, and prices per kilo are generally fixed.",
+    "suggested_tip": "Buy meat by the kilo at a butchery, specify the type and cut  it fresh to order at mostly fixed prices."
+  },
+  {
+    "id": "marketplace_026",
+    "category": "marketplace",
+    "sub_category": "fish",
+    "situation": "buying_lake_fish",
+    "rwanda_context": "Fresh fish in Rwanda often comes from Lake Kivu, including tilapia and 'sambaza', tiny fish usually fried whole. Markets sell them fresh or dried, and they are a tasty, affordable local specialty.",
+    "suggested_tip": "Try Lake Kivu fish like tilapia or small 'sambaza'  sold fresh or dried at markets, they are an affordable local specialty."
+  },
+  {
+    "id": "marketplace_027",
+    "category": "marketplace",
+    "sub_category": "dairy",
+    "situation": "buying_fresh_milk",
+    "rwanda_context": "Milk is culturally important in Rwanda, and 'milk bars' and market vendors sell fresh milk ('amata') and fermented milk ('ikivuguto'). Packaged brands like Inyange are also sold in supermarkets for those who prefer sealed products.",
+    "suggested_tip": "Try fresh milk ('amata') or fermented milk ('ikivuguto') at a milk bar  or buy sealed brands like Inyange in supermarkets."
+  },
+  {
+    "id": "marketplace_028",
+    "category": "marketplace",
+    "sub_category": "grains",
+    "situation": "buying_beans_and_rice_in_bulk",
+    "rwanda_context": "Staples like beans, rice, maize, and sorghum are sold loose from sacks at Kigali markets, measured by cup, tin, or kilo. You can buy exactly the quantity you need, which is cheaper than pre-packaged supermarket versions.",
+    "suggested_tip": "Buy beans and rice loose by the cup or kilo from market sacks. It is cheaper than pre-packaged supermarket bags."
+  },
+  {
+    "id": "marketplace_029",
+    "category": "marketplace",
+    "sub_category": "market_hours",
+    "situation": "opening_times",
+    "rwanda_context": "Kigali markets are generally busiest in the morning when produce is freshest, and most run through the day into early evening. Arriving early gives the best selection, while late afternoon may mean picked-over stock.",
+    "suggested_tip": "Shop in the morning for the freshest produce and best selection  Kigali markets thin out by late afternoon."
+  },
+  {
+    "id": "marketplace_030",
+    "category": "marketplace",
+    "sub_category": "umuganda",
+    "situation": "market_closed_umuganda_morning",
+    "rwanda_context": "On the last Saturday of each month, Rwanda holds Umuganda, a mandatory community-service morning, during which markets and shops stay closed until around late morning. Movement is limited until the community work finishes.",
+    "suggested_tip": "Avoid shopping on the last Saturday morning of the month. Markets stay closed during Umuganda until roughly late morning."
+  },
+  {
+    "id": "marketplace_031",
+    "category": "marketplace",
+    "sub_category": "weighing",
+    "situation": "watching_the_scale",
+    "rwanda_context": "When buying produce or meat by weight at Kigali markets, it is normal and accepted to watch the scale as items are weighed. Most vendors are honest, but observing the weighing is a reasonable and polite habit.",
+    "suggested_tip": "Watch the scale when buying by weight. It is accepted practice and helps you confirm you are getting the right amount."
+  },
+  {
+    "id": "marketplace_032",
+    "category": "marketplace",
+    "sub_category": "safety",
+    "situation": "watching_belongings",
+    "rwanda_context": "Kigali is very safe overall, but crowded markets like Nyabugogo are places to keep an eye on your phone, wallet, and bag, as in any busy market worldwide. Carrying only what you need reduces any risk.",
+    "suggested_tip": "Keep your phone and wallet secure in crowded markets. Kigali is safe, but busy stalls call for normal caution."
+  },
+  {
+    "id": "marketplace_033",
+    "category": "marketplace",
+    "sub_category": "quality_check",
+    "situation": "inspecting_before_buying",
+    "rwanda_context": "At Kigali markets, it is fine to inspect items like electronics, crafts, or clothing before buying, since returns are usually not possible with informal vendors. Checking quality upfront protects you from faulty goods.",
+    "suggested_tip": "Inspect goods carefully before buying at markets; informal vendors rarely accept returns, so check quality upfront."
+  },
+  {
+    "id": "marketplace_034",
+    "category": "marketplace",
+    "sub_category": "language",
+    "situation": "basic_market_phrases",
+    "rwanda_context": "A few Kinyarwanda phrases help a lot at markets: 'Ni angahe?' (how much?), 'Birahenze' (it's expensive), 'Gabanya' (reduce it), and 'Murakoze' (thank you). Using them shows respect and often warms up bargaining.",
+    "suggested_tip": "Learn 'Birahenze' (it's expensive) and 'Gabanya' (lower it) for bargaining  a little. Kinyarwanda earns goodwill and better prices."
+  },
+  {
+    "id": "marketplace_035",
+    "category": "marketplace",
+    "sub_category": "bargaining",
+    "situation": "buying_multiple_items_discount",
+    "rwanda_context": "At Kigali markets, buying several items from the same vendor is a natural way to get a better overall price. Vendors are often willing to lower the total or add a small extra when you buy in quantity.",
+    "suggested_tip": "Bundle purchases from one vendor to get a better deal  buying several items often earns a discount or a small extra."
+  },
+  {
+    "id": "marketplace_036",
+    "category": "marketplace",
+    "sub_category": "supermarket",
+    "situation": "imported_goods_cost_more",
+    "rwanda_context": "In Kigali supermarkets, imported products (foreign snacks, cheeses, cosmetics) are noticeably more expensive than local goods due to import costs. Buying locally produced items and fresh market produce is far cheaper.",
+    "suggested_tip": "Expect imported goods to be pricey in supermarkets, choose local products and market produce for much better value."
+  },
+  {
+    "id": "marketplace_037",
+    "category": "marketplace",
+    "sub_category": "produce",
+    "situation": "seasonal_availability",
+    "rwanda_context": "Rwanda's produce is seasonal, so items like mangoes, avocados, and certain vegetables are cheapest and best when in season. Vendors sell what is fresh that week, and prices drop noticeably during peak harvest.",
+    "suggested_tip": "Buy fruit and vegetables in season for the best price and flavor  vendors sell what is freshly harvested that week."
+  },
+  {
+    "id": "marketplace_038",
+    "category": "marketplace",
+    "sub_category": "payment",
+    "situation": "counting_change_carefully",
+    "rwanda_context": "When paying with cash at busy Kigali markets, it is wise to count your change before leaving the stall, as mistakes happen in the rush. Vendors are generally honest, and a quick check avoids any confusion.",
+    "suggested_tip": "Count your change before leaving the stall. Busy markets get hectic, and a quick check avoids honest mistakes."
+  },
+  {
+    "id": "marketplace_039",
+    "category": "marketplace",
+    "sub_category": "crafts",
+    "situation": "fixed_price_craft_shops",
+    "rwanda_context": "While market craft stalls allow bargaining, some formal craft shops and cooperative boutiques in Kigali sell at fixed prices to support fair pay for artisans. In those places, prices are set and haggling is not appropriate.",
+    "suggested_tip": "Check whether a craft shop has fixed prices, cooperatives set fair prices for artisans, so don't bargain there."
+  },
+  {
+    "id": "marketplace_040",
+    "category": "marketplace",
+    "sub_category": "market_navigation",
+    "situation": "finding_sections",
+    "rwanda_context": "Large Kigali markets like Kimironko are organized into sections of produce, fabric, crafts, shoes, and household goods each have their own area. Asking a vendor to point you to the right section saves time in the maze of stalls.",
+    "suggested_tip": "Ask a vendor to direct you to the right section of big markets like Kimironko group produce, fabric, and crafts in separate areas."
+  },
+  {
+    "id": "marketplace_041",
+    "category": "marketplace",
+    "sub_category": "bargaining",
+    "situation": "no_bargaining_on_cooked_food",
+    "rwanda_context": "While goods are negotiable at markets, cooked food and drinks sold at market stalls usually have set prices. Bargaining applies to produce, fabric, and crafts, not to a plate of food or a bottle of soda.",
+    "suggested_tip": "Don't bargain over cooked food or drinks at market stalls; those prices are fixed, unlike produce and crafts."
+  },
+  {
+    "id": "marketplace_042",
+    "category": "marketplace",
+    "sub_category": "supermarket",
+    "situation": "self_weighing_produce",
+    "rwanda_context": "Some Kigali supermarkets require you to weigh loose produce yourself at a scale station in the fruit and vegetable area, which prints a price sticker. Without this sticker, the cashier may not be able to ring up the item.",
+    "suggested_tip": "Weigh loose produce at the in-store scale to get a price sticker  some supermarkets require before checkout."
+  },
+  {
+    "id": "marketplace_043",
+    "category": "marketplace",
+    "sub_category": "airtime",
+    "situation": "buying_airtime_and_sim",
+    "rwanda_context": "Phone airtime and Mobile Money top-ups are sold everywhere in Kigali by kiosks, agents, and market vendors, either as scratch cards or direct electronic transfers. SIM cards require ID registration, done at official telecom points.",
+    "suggested_tip": "Buy airtime easily from kiosks or MoMo agents  but register a new SIM with your ID at an official MTN or Airtel point."
+  },
+  {
+    "id": "marketplace_044",
+    "category": "marketplace",
+    "sub_category": "respect",
+    "situation": "politeness_with_vendors",
+    "rwanda_context": "Rwandan market culture values calm, respectful interaction. Even when declining to buy or negotiating hard, staying polite, patient, and soft-spoken is appreciated, and raising your voice or being dismissive is frowned upon.",
+    "suggested_tip": "Stay calm and polite with vendors even when declining or negotiating  respectful, soft-spoken conduct is valued in Rwanda."
+  },
+  {
+    "id": "marketplace_045",
+    "category": "marketplace",
+    "sub_category": "logistics",
+    "situation": "getting_help_carrying",
+    "rwanda_context": "At large Kigali markets, porters or vendors can help carry heavy purchases to a taxi or moto for a small tip. It is a normal service, especially if you have bought bulky produce or several bags.",
+    "suggested_tip": "Accept a porter's help carrying heavy bags to your ride for a small tip. It is a normal service at big markets."
+  },
+  {
+    "id": "marketplace_046",
+    "category": "marketplace",
+    "sub_category": "produce",
+    "situation": "avoiding_over_handling",
+    "rwanda_context": "In Rwandan markets, it is considered impolite to pick up and squeeze large amounts of produce you do not intend to buy. Vendors prefer that you point to what interests you and handle only what you are seriously considering.",
+    "suggested_tip": "Handle only products you seriously intend to buy, rather than squeezing everything, which vendors find impolite."
+  },
+  {
+    "id": "marketplace_047",
+    "category": "marketplace",
+    "sub_category": "returns",
+    "situation": "no_returns_at_markets",
+    "rwanda_context": "Purchases from informal Kigali market vendors are typically final, with no returns or exchanges. This makes it important to check items and confirm you are happy before paying, unlike supermarkets which may allow returns with a receipt.",
+    "suggested_tip": "Treat market purchases as final. There are usually no returns, so confirm you are happy before paying."
+  },
+  {
+    "id": "marketplace_048",
+    "category": "marketplace",
+    "sub_category": "supermarket",
+    "situation": "finding_supermarkets",
+    "rwanda_context": "Kigali has several well-stocked supermarkets such as Simba Supermarket, Sawa Citi, and stores in malls like Kigali Heights and CHIC. They carry local and imported goods at fixed prices and accept cards and Mobile Money.",
+    "suggested_tip": "For fixed-price shopping, head to supermarkets like Simba or Sawa Citi  they stock local and imported goods and take cards and MoMo."
+  },
+  {
+    "id": "marketplace_049",
+    "category": "marketplace",
+    "sub_category": "fabric",
+    "situation": "matching_fabric_for_outfit",
+    "rwanda_context": "When buying igitenge for a specific outfit in Kigali, it helps to buy enough matching fabric from the same roll at once, since exact patterns can be hard to find again later. Vendors can advise on how much you need.",
+    "suggested_tip": "Buy all the matching fabric you need at once. Exact patterns are hard to find again, so ask the vendor how much to get."
+  },
+  {
+    "id": "marketplace_050",
+    "category": "marketplace",
+    "sub_category": "bargaining",
+    "situation": "confirming_final_price",
+    "rwanda_context": "Once you and a Kigali vendor agree on a price, it is polite to confirm the final amount clearly before handing over money, so there is no confusion. A clear 'yego' (yes) on the agreed figure seals the deal respectfully.",
+    "suggested_tip": "Confirm the agreed price clearly before paying  a simple 'yego' on the final figure to avoid any confusion at the end."
+  }
+
+]

@@ -2,10 +2,15 @@ import logging
 from typing import Annotated, Any
 
 from fastapi import APIRouter, Depends, File, Form, HTTPException, UploadFile
+from pymongo.database import Database
+from pymongo.errors import PyMongoError
+from starlette.concurrency import run_in_threadpool
 
 from app.core.auth import get_current_user
+from app.core.database import get_database
 from app.schemas.response import ConversationResponse
 from app.services.ai_pipeline import process_audio
+from app.services.temporary_conversation_store import store_temporary_turn
 
 router = APIRouter()
 
@@ -38,8 +43,10 @@ async def process_conversation(
         dict[str, Any],
         Depends(get_current_user),
     ],
+    database: Annotated[Database, Depends(get_database)],
     audio: UploadFile = File(...),
     direction: str = Form(...),
+    conversation_id: str | None = Form(None),
 ):
     logger.info(
         "Conversation request received: user_id=%s filename=%s content_type=%s",
@@ -93,11 +100,13 @@ async def process_conversation(
     logger.info("Sending audio to AI pipeline.")
 
     try:
-        result = await process_audio(
-            audio_bytes=audio_bytes,
-            content_type=content_type,
-            filename=audio.filename,
-            direction=direction,
+        result = ConversationResponse.model_validate(
+            await process_audio(
+                audio_bytes=audio_bytes,
+                content_type=content_type,
+                filename=audio.filename,
+                direction=direction,
+            )
         )
 
         logger.info("AI pipeline completed successfully.")
@@ -109,5 +118,29 @@ async def process_conversation(
             status_code=500,
             detail="Audio processing failed.",
         )
+
+    turn = result.model_dump(
+        exclude={
+            "conversation_id",
+            "translated_audio",
+            "translated_audio_mime_type",
+        }
+    )
+    turn["direction"] = direction
+
+    try:
+        result.conversation_id = await run_in_threadpool(
+            store_temporary_turn,
+            database,
+            current_user["_id"],
+            turn,
+            conversation_id,
+        )
+    except PyMongoError as error:
+        logger.exception("Temporary conversation storage failed.")
+        raise HTTPException(
+            status_code=503,
+            detail="Temporary conversation storage is unavailable.",
+        ) from error
 
     return result
