@@ -1,5 +1,6 @@
 import json
 from functools import lru_cache
+from typing import Any, TypeVar
 
 from google import genai
 from google.genai import types
@@ -9,6 +10,7 @@ from app.core.config import GEMINI_API_KEY, GEMINI_MODEL
 from app.schemas.knowledge import KnowledgeSearchResult
 from app.schemas.response import Intent
 from app.services.knowledge_dataset import load_knowledge_dataset
+from app.services.rag_trace import trace_rag
 
 
 class GeminiRagError(RuntimeError):
@@ -17,6 +19,7 @@ class GeminiRagError(RuntimeError):
 
 STRUCTURED_RESPONSE_ATTEMPTS = 2
 STRUCTURED_RESPONSE_MAX_TOKENS = 1024
+StructuredModel = TypeVar("StructuredModel", bound=BaseModel)
 
 
 class GeneratedSuggestion(BaseModel):
@@ -51,9 +54,9 @@ def knowledge_taxonomy() -> dict[str, dict[str, list[str]]]:
 class GeminiRagService:
     def __init__(
         self,
-        client=None,
+        client: Any | None = None,
         model: str = GEMINI_MODEL,
-    ):
+    ) -> None:
         if client is None:
             if not GEMINI_API_KEY:
                 raise GeminiRagError("GEMINI_API_KEY is not configured.")
@@ -138,7 +141,11 @@ class GeminiRagService:
         suggestion = generated.suggestion.strip()
         return suggestion or None
 
-    def _generate(self, contents: str, config):
+    def _generate(
+        self,
+        contents: str,
+        config: types.GenerateContentConfig,
+    ) -> types.GenerateContentResponse:
         try:
             return self.client.models.generate_content(
                 model=self.model,
@@ -148,23 +155,51 @@ class GeminiRagService:
         except Exception as error:
             raise GeminiRagError("Gemini generation request failed.") from error
 
-    def _generate_structured(self, contents: str, config, schema):
-        last_error = None
+    def _generate_structured(
+        self,
+        contents: str,
+        config: types.GenerateContentConfig,
+        schema: type[StructuredModel],
+    ) -> StructuredModel:
+        last_error: GeminiRagError | None = None
 
-        for _attempt in range(STRUCTURED_RESPONSE_ATTEMPTS):
+        schema_name = schema.__name__
+
+        for attempt in range(1, STRUCTURED_RESPONSE_ATTEMPTS + 1):
+            trace_rag(
+                "gemini.request.started",
+                model=self.model,
+                schema=schema_name,
+                attempt=attempt,
+            )
             response = self._generate(contents=contents, config=config)
 
             try:
-                return self._parse_response(response, schema)
+                parsed = self._parse_response(response, schema)
+                trace_rag(
+                    "gemini.response.valid",
+                    schema=schema_name,
+                    attempt=attempt,
+                )
+                return parsed
             except GeminiRagError as error:
                 last_error = error
+                trace_rag(
+                    "gemini.response.invalid",
+                    schema=schema_name,
+                    attempt=attempt,
+                    reason=str(error),
+                )
 
         raise GeminiRagError(
             "Gemini did not return a valid structured response after retrying."
         ) from last_error
 
     @staticmethod
-    def _parse_response(response, schema):
+    def _parse_response(
+        response: types.GenerateContentResponse,
+        schema: type[StructuredModel],
+    ) -> StructuredModel:
         try:
             parsed = getattr(response, "parsed", None)
 

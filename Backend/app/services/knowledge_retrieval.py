@@ -9,6 +9,9 @@ from app.services.knowledge_index import (
     COLLECTION_NAME,
     VECTOR_INDEX_NAME,
 )
+from app.services.rag_trace import trace_rag
+
+
 def build_vector_search_pipeline(
     query_embedding: list[float],
     model: str,
@@ -68,7 +71,30 @@ def search_knowledge(
     embedding_provider: EmbeddingProvider | None = None,
 ) -> list[KnowledgeSearchResult]:
     provider = embedding_provider or GeminiEmbeddingService()
+    trace_rag(
+        "embedding.started",
+        query=query,
+        model=provider.model,
+        dimensions=provider.dimensions,
+    )
     query_embedding = provider.embed_query(query)
+    trace_rag(
+        "embedding.completed",
+        model=provider.model,
+        dimensions=len(query_embedding),
+    )
+    trace_rag(
+        "vector_search.started",
+        index=VECTOR_INDEX_NAME,
+        collection=COLLECTION_NAME,
+        filters={
+            "category": category,
+            "sub_category": sub_category,
+            "situation": situation,
+        },
+        top_k=top_k,
+        num_candidates=max(100, top_k * 20),
+    )
     documents = list(
         database[COLLECTION_NAME].aggregate(
             build_vector_search_pipeline(
@@ -81,6 +107,10 @@ def search_knowledge(
                 top_k=top_k,
             )
         )
+    )
+    trace_rag(
+        "vector_search.completed",
+        document_count=len(documents),
     )
 
     return [

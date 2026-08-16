@@ -87,6 +87,41 @@ def test_orchestration_retrieves_and_generates_grounded_tip(monkeypatch):
     assert service.generation_records == [helmet_record()]
 
 
+def test_orchestration_prints_each_successful_trace_stage(
+    monkeypatch,
+    capsys,
+):
+    service = FakeGeminiService(helmet_intent())
+    monkeypatch.setattr(
+        "app.services.rag_orchestration.search_knowledge",
+        lambda **_kwargs: [helmet_record()],
+    )
+
+    orchestrate_rag(
+        database=object(),
+        transcript="Do I really need to wear this helmet?",
+        gemini_service=service,
+    )
+
+    output = capsys.readouterr().out
+
+    for stage in (
+        "pipeline.started",
+        "intent.started",
+        "intent.detected",
+        "retrieval.started",
+        "retrieval.completed",
+        "grounding.completed",
+        "suggestion.started",
+        "suggestion.generated",
+        "pipeline.completed",
+    ):
+        assert f"[rag trace] {stage} |" in output
+
+    assert '"query": "moto passenger helmet requirement in Rwanda"' in output
+    assert '"suggestion": "Use the passenger helmet."' in output
+
+
 def test_orchestration_does_not_generate_without_useful_result(monkeypatch):
     service = FakeGeminiService(helmet_intent())
     monkeypatch.setattr(

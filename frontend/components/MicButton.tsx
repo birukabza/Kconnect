@@ -2,13 +2,10 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import clsx from "clsx";
-import { Mic, Square, Volume2 } from "lucide-react";
+import { Mic, RotateCcw, Square, Volume2 } from "lucide-react";
 
+import { AudioRecorder, MicPermissionError } from "@/lib/audioRecorder";
 import { useConversationStore } from "@/lib/conversationStore";
-import {
-  AudioRecorder,
-  MicPermissionError,
-} from "@/lib/audioRecorder";
 import {
   stopBackendAudioPlayback,
   useConversePipeline,
@@ -20,9 +17,9 @@ export function MicButton() {
   const status = useConversationStore((state) => state.status);
   const setStatus = useConversationStore((state) => state.setStatus);
   const direction = useConversationStore((state) => state.direction);
+  const clearSession = useConversationStore((state) => state.clearSession);
 
   const [toastMessage, setToastMessage] = useState<string | null>(null);
-
   const recorderRef = useRef<AudioRecorder | null>(null);
 
   const recordingSupported =
@@ -38,10 +35,7 @@ export function MicButton() {
   useEffect(() => {
     if (!toastMessage) return;
 
-    const timer = setTimeout(() => {
-      setToastMessage(null);
-    }, 4000);
-
+    const timer = setTimeout(() => setToastMessage(null), 4000);
     return () => clearTimeout(timer);
   }, [toastMessage]);
 
@@ -60,21 +54,16 @@ export function MicButton() {
         return;
       }
 
-      await runPipeline({
-        audioBlob: blob,
-      });
+      await runPipeline({ audioBlob: blob });
     } catch (error) {
       setStatus("error");
-
       showToast(
         error instanceof Error
           ? error.message
           : "Something went wrong while recording."
       );
 
-      setTimeout(() => {
-        setStatus("idle");
-      }, 1500);
+      setTimeout(() => setStatus("idle"), 1500);
     }
   }, [runPipeline, setStatus, showToast]);
 
@@ -86,9 +75,7 @@ export function MicButton() {
   }, []);
 
   const handleClick = useCallback(async () => {
-    if (status === "processing") {
-      return;
-    }
+    if (status === "processing") return;
 
     if (status === "speaking") {
       stopBackendAudioPlayback();
@@ -99,32 +86,29 @@ export function MicButton() {
 
     if (status === "idle" || status === "error") {
       if (!direction) {
-        showToast("Select a speech direction first.");
+        showToast("Choose a language channel first.");
         return;
       }
 
       if (!recordingSupported) {
-        showToast("Microphone recording isn't supported in this browser.");
+        showToast("Microphone recording is not supported in this browser.");
         return;
       }
 
       try {
         const recorder = new AudioRecorder();
-
         recorderRef.current = recorder;
-
         await recorder.start();
-
+        clearSession();
         setStatus("listening");
       } catch (error) {
         recorderRef.current = null;
 
-        if (error instanceof MicPermissionError) {
-          showToast("Microphone permission was denied.");
-        } else {
-          showToast("Couldn't access the microphone.");
-        }
-
+        showToast(
+          error instanceof MicPermissionError
+            ? "Microphone permission was denied."
+            : "Could not access the microphone."
+        );
         setStatus("idle");
       }
 
@@ -135,110 +119,35 @@ export function MicButton() {
       await stopListening();
     }
   }, [
-    status,
+    clearSession,
     direction,
     recordingSupported,
     setStatus,
     showToast,
+    status,
     stopListening,
   ]);
 
-  const label =
-    !direction && status === "idle"
-      ? "Select direction"
-      : status === "idle"
+  const waitingForDirection = !direction && status === "idle";
+  const label = waitingForDirection
+    ? "Choose channel"
+    : status === "idle"
       ? "Tap to speak"
       : status === "listening"
         ? "Tap to stop"
         : status === "processing"
-          ? "Thinking…"
+          ? "Translating"
           : status === "speaking"
-            ? "Speaking…"
+            ? "Stop audio"
             : "Try again";
 
   const isListening = status === "listening";
   const isProcessing = status === "processing";
   const isSpeaking = status === "speaking";
   const isError = status === "error";
-  const waitingForDirection = !direction && status === "idle";
 
   return (
-    <div className="flex flex-col items-center gap-3">
-      <style jsx>{`
-        @keyframes micPulse {
-          0%,
-          100% {
-            transform: scale(1);
-            opacity: 0.25;
-          }
-
-          50% {
-            transform: scale(1.18);
-            opacity: 0;
-          }
-        }
-
-        @keyframes micPulseInner {
-          0%,
-          100% {
-            transform: scale(1);
-            opacity: 0.35;
-          }
-
-          50% {
-            transform: scale(1.1);
-            opacity: 0;
-          }
-        }
-
-        @keyframes micFloat {
-          0%,
-          100% {
-            transform: translateY(0);
-          }
-
-          50% {
-            transform: translateY(-2px);
-          }
-        }
-
-        @keyframes speakingPulse {
-          0%,
-          100% {
-            transform: scale(1);
-          }
-
-          50% {
-            transform: scale(1.05);
-          }
-        }
-
-        .mic-pulse {
-          animation: micPulse 1.8s ease-out infinite;
-        }
-
-        .mic-pulse-inner {
-          animation: micPulseInner 1.4s ease-out infinite;
-        }
-
-        .mic-listening-icon {
-          animation: micFloat 0.9s ease-in-out infinite;
-        }
-
-        .mic-speaking {
-          animation: speakingPulse 0.9s ease-in-out infinite;
-        }
-
-        @media (prefers-reduced-motion: reduce) {
-          .mic-pulse,
-          .mic-pulse-inner,
-          .mic-listening-icon,
-          .mic-speaking {
-            animation: none;
-          }
-        }
-      `}</style>
-
+    <div className="relative flex items-center justify-center">
       <button
         type="button"
         onClick={handleClick}
@@ -246,91 +155,40 @@ export function MicButton() {
         aria-pressed={isListening}
         aria-label={label}
         className={clsx(
-          "relative flex h-20 w-20 items-center justify-center rounded-full text-white shadow-lg",
-          "transition-all duration-200",
-          "focus:outline-none focus-visible:ring-4 focus-visible:ring-rw-yellow/60",
-          "disabled:cursor-not-allowed disabled:opacity-90",
-          "active:scale-95",
-          !isListening &&
-            !isProcessing &&
-            !isSpeaking &&
-            !isError &&
-            "hover:scale-105",
-          isListening && "bg-rw-blue",
-          isProcessing && "bg-rw-blue",
-          isSpeaking && "bg-rw-green",
-          status === "idle" && "bg-rw-blue",
-          waitingForDirection && "bg-rw-ink/25 shadow-none",
-          isError && "bg-rose-600",
-          isSpeaking && "mic-speaking"
+          "relative flex h-[118px] w-[118px] shrink-0 flex-col items-center justify-center gap-2 rounded-full border-[6px] border-rw-paper px-2 text-white",
+          "shadow-[0_10px_30px_rgba(20,33,29,0.18)] transition-[background-color,box-shadow,transform] duration-300",
+          "focus:outline-none focus-visible:ring-4 focus-visible:ring-rw-yellow focus-visible:ring-offset-2",
+          "active:scale-[0.97] disabled:cursor-not-allowed",
+          "sm:h-[130px] sm:w-[130px]",
+          waitingForDirection && "bg-[#A7B5AF] shadow-[0_8px_20px_rgba(20,33,29,0.12)]",
+          status === "idle" && direction && "bg-rw-blue hover:bg-[#1158B5]",
+          isListening && "mic-listening bg-rw-green",
+          isProcessing && "bg-rw-ink",
+          isSpeaking && "bg-rw-coral hover:bg-[#D85649]",
+          isError && "bg-rose-600 hover:bg-rose-700"
         )}
       >
-        {/* Outer listening pulse */}
-        {isListening && (
-          <>
-            <span
-              className="mic-pulse absolute inset-0 rounded-full bg-rw-yellow"
-              aria-hidden="true"
-            />
-
-            <span
-              className="mic-pulse-inner absolute inset-0 rounded-full bg-rw-yellow"
-              aria-hidden="true"
-            />
-          </>
-        )}
-
-        {/* Inner button glow */}
-        {isListening && (
-          <span
-            className="absolute inset-1 rounded-full border-2 border-rw-yellow/60"
-            aria-hidden="true"
-          />
-        )}
-
-        <span
-          className={clsx(
-            "relative z-10 flex items-center justify-center",
-            isListening && "mic-listening-icon"
-          )}
-        >
+        <span className="flex h-9 items-center justify-center" aria-hidden="true">
           {isProcessing ? (
             <Spinner className="h-7 w-7" />
           ) : isSpeaking ? (
-            <Volume2 className="h-7 w-7" aria-hidden="true" />
+            <Volume2 className="h-8 w-8" />
           ) : isListening ? (
-            <Square
-              className="h-6 w-6"
-              aria-hidden="true"
-              fill="currentColor"
-            />
+            <Square className="h-7 w-7" fill="currentColor" />
+          ) : isError ? (
+            <RotateCcw className="h-7 w-7" />
           ) : (
-            <Mic className="h-7 w-7" aria-hidden="true" />
+            <Mic className="h-8 w-8" />
           )}
+        </span>
+
+        <span className="max-w-[90px] text-center text-[11px] font-bold leading-tight sm:text-xs">
+          {label}
         </span>
       </button>
 
-      <span
-        className={clsx(
-          "text-xs font-medium transition-colors duration-200",
-          isListening && "text-rw-blue",
-          isProcessing && "text-rw-ink/60",
-          isSpeaking && "text-rw-green",
-          isError && "text-rose-600",
-          waitingForDirection && "text-rw-ink/40",
-          status === "idle" &&
-            !waitingForDirection &&
-            "text-rw-ink/60"
-        )}
-      >
-        {label}
-      </span>
-
       {toastMessage && (
-        <Toast
-          message={toastMessage}
-          onDismiss={() => setToastMessage(null)}
-        />
+        <Toast message={toastMessage} onDismiss={() => setToastMessage(null)} />
       )}
     </div>
   );
