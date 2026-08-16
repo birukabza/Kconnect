@@ -1,13 +1,13 @@
 "use client";
 
 import { ReactNode, useEffect, useState } from "react";
-import { LoaderCircle } from "lucide-react";
 
 import { getCurrentUser } from "@/lib/auth";
 import { useAuthStore } from "@/lib/authStore";
 import { clearTemporaryConversationId } from "@/lib/temporaryConversation";
 import { AuthScreen } from "./AuthScreen";
-
+import { BrandMark } from "./BrandMark";
+import { Spinner } from "./ui/Spinner";
 
 export function AuthGate({ children }: { children: ReactNode }) {
   const accessToken = useAuthStore((state) => state.accessToken);
@@ -52,11 +52,14 @@ export function AuthGate({ children }: { children: ReactNode }) {
 
   if (!hydrated || (accessToken && verifiedToken !== accessToken)) {
     return (
-      <main className="flex min-h-dvh items-center justify-center bg-rw-bg">
-        <LoaderCircle
-          className="h-6 w-6 animate-spin text-rw-blue"
-          aria-label="Checking account"
-        />
+      <main className="flex min-h-dvh items-center justify-center bg-rw-paper">
+        <div className="flex flex-col items-center gap-5" role="status">
+          <BrandMark />
+          <div className="flex items-center gap-2 text-sm font-medium text-rw-muted">
+            <Spinner className="h-4 w-4 text-rw-blue" />
+            <span>Opening your desk</span>
+          </div>
+        </div>
       </main>
     );
   }

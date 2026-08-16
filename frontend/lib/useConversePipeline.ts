@@ -259,11 +259,7 @@ export function useConversePipeline(
           await finished;
         }
 
-        /*
-         * Remove the temporary translation bubble and return
-         * the interface to the ready state.
-         */
-        clearSession();
+        // Keep the completed turn visible until the next recording begins.
         setStatus("idle");
       } catch (error) {
         updateMessage(id, {

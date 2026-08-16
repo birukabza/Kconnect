@@ -17,6 +17,7 @@ from app.services.rag_orchestration import (
     RagOrchestrationResult,
     orchestrate_rag,
 )
+from app.services.rag_trace import trace_rag
 
 
 BACKEND_DIR = Path(__file__).resolve().parents[2]
@@ -246,6 +247,10 @@ async def _rag_path(
     transcript: str,
 ) -> RagOrchestrationResult:
     if database is None:
+        trace_rag(
+            "pipeline.skipped",
+            reason="database_unavailable",
+        )
         return RagOrchestrationResult()
 
     try:
@@ -254,7 +259,8 @@ async def _rag_path(
             database,
             transcript,
         )
-    except Exception:
+    except Exception as error:
+        trace_rag("pipeline.failed", reason=str(error))
         logger.exception("RAG orchestration failed unexpectedly")
         return RagOrchestrationResult()
 
