@@ -5,7 +5,7 @@ from app.api.auth import router as auth_router
 from app.api.conversation import router as conversation_router
 from app.api.health import router as health_router
 from app.api.knowledge import router as knowledge_router
-from app.core.config import APP_NAME, APP_VERSION
+from app.core.config import APP_NAME, APP_VERSION, CORS_ORIGINS
 
 app = FastAPI(
     title=APP_NAME,
@@ -14,10 +14,7 @@ app = FastAPI(
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        "http://localhost:3000",
-        "http://127.0.0.1:3000",
-    ],
+    allow_origins=CORS_ORIGINS,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

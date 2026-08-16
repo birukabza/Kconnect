@@ -17,6 +17,15 @@ APP_VERSION = os.getenv(
     "0.1.0"
 )
 
+CORS_ORIGINS = [
+    origin.strip().rstrip("/")
+    for origin in os.getenv(
+        "CORS_ORIGINS",
+        "http://localhost:3000,http://127.0.0.1:3000",
+    ).split(",")
+    if origin.strip()
+]
+
 MONGODB_URI = os.getenv(
     "MONGODB_URI",
     "mongodb://localhost:27017"
