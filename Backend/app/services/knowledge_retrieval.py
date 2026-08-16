@@ -9,12 +9,6 @@ from app.services.knowledge_index import (
     COLLECTION_NAME,
     VECTOR_INDEX_NAME,
 )
-
-
-class KnowledgeIndexEmptyError(RuntimeError):
-    pass
-
-
 def build_vector_search_pipeline(
     query_embedding: list[float],
     model: str,
@@ -88,11 +82,6 @@ def search_knowledge(
             )
         )
     )
-
-    if not documents:
-        raise KnowledgeIndexEmptyError(
-            "Knowledge index is empty. Run dataset ingestion first."
-        )
 
     return [
         KnowledgeSearchResult(

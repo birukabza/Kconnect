@@ -14,6 +14,7 @@ interface BackendIntent {
   category?: string | null;
   sub_category?: string | null;
   situation?: string | null;
+  search_query?: string | null;
 }
 
 interface BackendConversationResponse {
@@ -213,6 +214,8 @@ export function useConversePipeline(
           sourceLang: initialSource,
           translatedText: result.translated_text,
           targetLang: initialTarget,
+          culturalTip: result.cultural_tip ?? undefined,
+          culturalSource: result.source ?? undefined,
           status: "done",
         });
 

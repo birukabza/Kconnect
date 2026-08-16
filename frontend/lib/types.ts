@@ -14,6 +14,8 @@ export interface Message {
   sourceLang: Lang;
   translatedText: string;
   targetLang: Lang;
+  culturalTip?: string;
+  culturalSource?: string;
   warnings?: string[];
   createdAt: number;
   // Absent (undefined) means "done" — only messages inserted optimistically

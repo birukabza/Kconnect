@@ -1,5 +1,7 @@
 "use client";
 
+import { Lightbulb } from "lucide-react";
+
 import { Message } from "@/lib/types";
 import { Spinner } from "./ui/Spinner";
 
@@ -75,6 +77,29 @@ export function ConversationBubble({
               <span className="h-3 w-[2px] rounded-full bg-rw-blue/70 animate-pulse [animation-delay:300ms]" />
               <span className="h-2 w-[2px] rounded-full bg-rw-blue/50 animate-pulse [animation-delay:400ms]" />
             </span>
+          </div>
+        )}
+
+        {!isPending && message.culturalTip && (
+          <div className="relative mt-3 border-t border-rw-ink/10 pt-3 text-left">
+            <div className="flex items-start gap-2">
+              <Lightbulb
+                className="mt-0.5 h-3.5 w-3.5 shrink-0 text-rw-yellow"
+                aria-hidden="true"
+              />
+
+              <div className="min-w-0">
+                <p className="text-xs leading-relaxed text-rw-ink/75">
+                  {message.culturalTip}
+                </p>
+
+                {message.culturalSource && (
+                  <p className="mt-1 text-[10px] leading-tight text-rw-ink/40">
+                    {message.culturalSource}
+                  </p>
+                )}
+              </div>
+            </div>
           </div>
         )}
       </div>

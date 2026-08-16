@@ -1,6 +1,11 @@
 from collections import Counter
 from types import SimpleNamespace
 
+from fastapi.testclient import TestClient
+
+from app.core.auth import get_current_user
+from app.core.database import get_database
+from app.main import app
 from app.schemas.knowledge import KnowledgeItem
 from app.services.gemini_embeddings import GeminiEmbeddingService
 from app.services.knowledge_dataset import load_knowledge_dataset
@@ -293,3 +298,50 @@ def test_search_returns_results_in_similarity_order():
         vector_stage["filter"]["$and"]
     )
     assert results[0].source == "Rwanda National Police"
+
+
+def test_search_returns_empty_list_when_filters_do_not_match():
+    database = FakeDatabase()
+    provider = TwoDimensionalEmbeddingProvider()
+
+    results = search_knowledge(
+        database,
+        query="an unrelated query",
+        category="transport",
+        sub_category="moto",
+        situation="missing_situation",
+        embedding_provider=provider,
+    )
+
+    assert results == []
+
+
+def test_knowledge_api_returns_empty_results_for_no_match(monkeypatch):
+    app.dependency_overrides[get_current_user] = lambda: {
+        "_id": "test-user"
+    }
+    app.dependency_overrides[get_database] = lambda: object()
+    monkeypatch.setattr(
+        "app.api.knowledge.search_knowledge",
+        lambda **_kwargs: [],
+    )
+
+    try:
+        with TestClient(app) as client:
+            response = client.post(
+                "/api/knowledge/search",
+                json={
+                    "query": "no matching knowledge",
+                    "category": "transport",
+                    "sub_category": "moto",
+                },
+            )
+    finally:
+        app.dependency_overrides.pop(get_current_user, None)
+        app.dependency_overrides.pop(get_database, None)
+
+    assert response.status_code == 200
+    assert response.json() == {
+        "query": "no matching knowledge",
+        "results": [],
+    }

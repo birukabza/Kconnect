@@ -62,3 +62,11 @@ GEMINI_EMBEDDING_BATCH_SIZE = max(
     1,
     int(os.getenv("GEMINI_EMBEDDING_BATCH_SIZE", "20")),
 )
+RAG_TOP_K = min(
+    10,
+    max(1, int(os.getenv("RAG_TOP_K", "3"))),
+)
+RAG_MIN_SIMILARITY_SCORE = min(
+    1.0,
+    max(0.0, float(os.getenv("RAG_MIN_SIMILARITY_SCORE", "0.75"))),
+)

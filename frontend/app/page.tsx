@@ -452,7 +452,7 @@ function ConversationExperience() {
 
           {/* Translation bubble */}
           {showBubble && (
-            <div className="absolute left-full top-1/2 z-20 ml-4 w-[170px] -translate-y-1/2 sm:w-[190px]">
+            <div className="absolute left-full top-1/2 z-20 ml-4 w-[190px] -translate-y-1/2 sm:w-[230px]">
               <ConversationBubble message={latestMessage} />
             </div>
           )}

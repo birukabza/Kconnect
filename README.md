@@ -15,11 +15,13 @@ FastAPI backend.
 - Hidden temporary conversation context in MongoDB
 - Validated cultural knowledge dataset ingestion with Gemini embeddings
 - Authenticated semantic search with MongoDB Atlas Vector Search
+- Gemini intent detection and grounded cultural suggestions
+- Parallel speech translation and RAG orchestration after transcription
 
 Temporary conversations retain only the latest 20 text turns and expire after
 60 minutes of inactivity. They are not displayed as history, and recorded or
-synthesized audio is never stored. Semantic knowledge search is available as a
-backend foundation; it is not yet connected to generated conversation tips.
+synthesized audio is never stored. A matching speech turn can include a short
+grounded suggestion in the live translation bubble.
 
 ## Backend setup
 
@@ -48,6 +50,8 @@ GEMINI_MODEL=your-generation-model
 GEMINI_EMBEDDING_MODEL=gemini-embedding-2
 GEMINI_EMBEDDING_DIMENSIONS=768
 GEMINI_EMBEDDING_BATCH_SIZE=20
+RAG_TOP_K=3
+RAG_MIN_SIMILARITY_SCORE=0.75
 ```
 
 `Backend/.env` and Google credential JSON files are ignored by Git.
@@ -91,9 +95,10 @@ Call `POST /api/knowledge/search` with a body such as:
 }
 ```
 
-The next orchestration layer will derive the filters and short search query
-from the conversation, retrieve complete records, and pass their context, tip,
-and source to the generation model.
+After speech-to-text, Gemini derives the filters and a short search query. The
+translation/TTS path and filtered RAG path then run in parallel. The generation
+model receives only the transcript, validated intent, and records above the
+configured similarity threshold. No matching evidence produces no suggestion.
 
 ## Frontend setup
 

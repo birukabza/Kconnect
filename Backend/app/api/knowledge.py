@@ -13,10 +13,7 @@ from app.schemas.knowledge import (
     KnowledgeSearchResponse,
 )
 from app.services.gemini_embeddings import EmbeddingServiceError
-from app.services.knowledge_retrieval import (
-    KnowledgeIndexEmptyError,
-    search_knowledge,
-)
+from app.services.knowledge_retrieval import search_knowledge
 
 
 logger = logging.getLogger(__name__)
@@ -39,11 +36,6 @@ async def search(
             situation=request.situation,
             top_k=request.top_k,
         )
-    except KnowledgeIndexEmptyError as error:
-        raise HTTPException(
-            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
-            detail=str(error),
-        ) from error
     except EmbeddingServiceError as error:
         logger.exception("Gemini embedding request failed")
         raise HTTPException(
