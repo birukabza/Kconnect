@@ -13,11 +13,15 @@ FastAPI backend.
 - Authenticated English/Kinyarwanda speech translation
 - Google Speech-to-Text, Translation, and Text-to-Speech integration
 - Hidden temporary conversation context in MongoDB
+- Validated cultural knowledge dataset ingestion with Gemini embeddings
+- Authenticated semantic search with MongoDB Atlas Vector Search
+- Gemini intent detection and grounded cultural suggestions
+- Parallel speech translation and RAG orchestration after transcription
 
 Temporary conversations retain only the latest 20 text turns and expire after
 60 minutes of inactivity. They are not displayed as history, and recorded or
-synthesized audio is never stored. The cultural-tip dataset is not connected
-yet.
+synthesized audio is never stored. A matching speech turn can include a short
+grounded suggestion in the live translation bubble.
 
 ## Backend setup
 
@@ -41,12 +45,60 @@ ACCESS_TOKEN_EXPIRE_MINUTES=60
 TEMPORARY_CONVERSATION_TTL_MINUTES=60
 TEMPORARY_CONVERSATION_MAX_TURNS=20
 GOOGLE_APPLICATION_CREDENTIALS=C:/path/to/service_account.json
+GEMINI_API_KEY=replace-with-your-gemini-api-key
+GEMINI_MODEL=your-generation-model
+GEMINI_EMBEDDING_MODEL=gemini-embedding-2
+GEMINI_EMBEDDING_DIMENSIONS=768
+GEMINI_EMBEDDING_BATCH_SIZE=20
+RAG_TOP_K=3
+RAG_MIN_SIMILARITY_SCORE=0.75
 ```
 
 `Backend/.env` and Google credential JSON files are ignored by Git.
 
 The API runs at `http://127.0.0.1:8000`. Its interactive documentation is at
 `http://127.0.0.1:8000/docs`.
+
+## Knowledge dataset
+
+Run these commands from `Backend`:
+
+```powershell
+python -m app.scripts.validate_knowledge
+python -m app.scripts.ingest_knowledge
+python -m app.scripts.setup_vector_index --wait
+python -m app.scripts.search_knowledge `
+  "moto passenger helmet requirement in Rwanda" `
+  --category transport `
+  --sub-category moto `
+  --situation helmet_use
+```
+
+Ingestion validates `data.json` and embeds exactly one field from each record:
+`rwanda_context`. Category, subcategory, situation, suggested tip, and source
+remain metadata. Changed context records are re-embedded; unchanged embeddings
+are reused. Ingestion also creates or updates the 768-dimension cosine vector
+index. The explicit setup command waits until Atlas reports that the index is
+queryable.
+
+Authenticated clients search through MongoDB's native `$vectorSearch` stage.
+Category and subcategory are required metadata filters; situation is optional.
+Call `POST /api/knowledge/search` with a body such as:
+
+```json
+{
+  "query": "moto passenger helmet requirement in Rwanda",
+  "category": "transport",
+  "sub_category": "moto",
+  "situation": "helmet_use",
+  "top_k": 3
+}
+```
+
+After speech-to-text, Gemini derives the filters and a short search query. The
+translation/TTS path and filtered RAG path then run in parallel. The generation
+model receives only the transcript, validated intent, and records above the
+configured similarity threshold. No matching evidence produces no suggestion.
 
 ## Frontend setup
 

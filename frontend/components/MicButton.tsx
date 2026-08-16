@@ -8,7 +8,6 @@ import { useConversationStore } from "@/lib/conversationStore";
 import {
   AudioRecorder,
   MicPermissionError,
-  SilenceDetector,
 } from "@/lib/audioRecorder";
 import {
   stopBackendAudioPlayback,
@@ -23,10 +22,8 @@ export function MicButton() {
   const direction = useConversationStore((state) => state.direction);
 
   const [toastMessage, setToastMessage] = useState<string | null>(null);
-  const [autoStopArmed, setAutoStopArmed] = useState(false);
 
   const recorderRef = useRef<AudioRecorder | null>(null);
-  const silenceDetectorRef = useRef<SilenceDetector | null>(null);
 
   const recordingSupported =
     typeof window !== "undefined" && AudioRecorder.isSupported();
@@ -50,11 +47,6 @@ export function MicButton() {
 
   const stopListening = useCallback(async () => {
     if (!recorderRef.current) return;
-
-    silenceDetectorRef.current?.stop();
-    silenceDetectorRef.current = null;
-
-    setAutoStopArmed(false);
 
     const recorder = recorderRef.current;
     recorderRef.current = null;
@@ -88,9 +80,6 @@ export function MicButton() {
 
   useEffect(() => {
     return () => {
-      silenceDetectorRef.current?.stop();
-      silenceDetectorRef.current = null;
-
       recorderRef.current?.cancel();
       recorderRef.current = null;
     };
@@ -127,19 +116,6 @@ export function MicButton() {
         await recorder.start();
 
         setStatus("listening");
-
-        const stream = recorder.getStream();
-
-        if (stream && SilenceDetector.isSupported()) {
-          setAutoStopArmed(true);
-
-          silenceDetectorRef.current = new SilenceDetector(
-            stream,
-            () => {
-              void stopListening();
-            }
-          );
-        }
       } catch (error) {
         recorderRef.current = null;
 
@@ -173,9 +149,7 @@ export function MicButton() {
       : status === "idle"
       ? "Tap to speak"
       : status === "listening"
-        ? autoStopArmed
-          ? "Listening…"
-          : "Tap to stop"
+        ? "Tap to stop"
         : status === "processing"
           ? "Thinking…"
           : status === "speaking"

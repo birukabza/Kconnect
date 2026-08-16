@@ -106,6 +106,7 @@ async def process_conversation(
                 content_type=content_type,
                 filename=audio.filename,
                 direction=direction,
+                database=database,
             )
         )
 

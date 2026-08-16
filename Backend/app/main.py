@@ -4,6 +4,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.api.auth import router as auth_router
 from app.api.conversation import router as conversation_router
 from app.api.health import router as health_router
+from app.api.knowledge import router as knowledge_router
 from app.core.config import APP_NAME, APP_VERSION
 
 app = FastAPI(
@@ -34,5 +35,10 @@ app.include_router(
 
 app.include_router(
     conversation_router,
+    prefix="/api",
+)
+
+app.include_router(
+    knowledge_router,
     prefix="/api",
 )

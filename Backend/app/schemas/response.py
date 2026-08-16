@@ -7,6 +7,7 @@ class Intent(BaseModel):
     category: Optional[str] = None
     sub_category: Optional[str] = None
     situation: Optional[str] = None
+    search_query: Optional[str] = None
 
 
 class ConversationResponse(BaseModel):

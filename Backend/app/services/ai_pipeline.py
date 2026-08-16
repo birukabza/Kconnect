@@ -1,5 +1,7 @@
+import asyncio
 import base64
 import json
+import logging
 import os
 from functools import lru_cache
 from pathlib import Path
@@ -8,8 +10,13 @@ from dotenv import load_dotenv
 from google.cloud import speech
 from google.cloud import texttospeech
 from google.cloud import translate_v3 as translate
+from pymongo.database import Database
 
 from app.schemas.response import ConversationResponse
+from app.services.rag_orchestration import (
+    RagOrchestrationResult,
+    orchestrate_rag,
+)
 
 
 BACKEND_DIR = Path(__file__).resolve().parents[2]
@@ -18,6 +25,7 @@ load_dotenv(BACKEND_DIR / ".env")
 
 AUDIO_MIME_TYPE = "audio/mpeg"
 KINYARWANDA_TTS_LANGUAGE_CODE = "sw-KE"
+logger = logging.getLogger(__name__)
 
 DIRECTION_CONFIG = {
     "en-to-rw": {
@@ -136,7 +144,8 @@ async def _transcribe_audio(
 ) -> str:
     client = _speech_client()
 
-    response = client.recognize(
+    response = await asyncio.to_thread(
+        client.recognize,
         config=_stt_config_for(
             content_type=content_type,
             filename=filename,
@@ -167,14 +176,15 @@ async def _translate_text(
     project_id = _google_project_id()
     client = _translation_client()
 
-    response = client.translate_text(
+    response = await asyncio.to_thread(
+        client.translate_text,
         request={
             "parent": f"projects/{project_id}/locations/global",
             "contents": [text],
             "mime_type": "text/plain",
             "source_language_code": source_language,
             "target_language_code": target_language,
-        }
+        },
     )
 
     return response.translations[0].translated_text
@@ -195,7 +205,8 @@ async def _synthesize_speech(
             language_code="en-US",
         )
 
-    response = client.synthesize_speech(
+    response = await asyncio.to_thread(
+        client.synthesize_speech,
         input=texttospeech.SynthesisInput(text=text),
         voice=voice,
         audio_config=texttospeech.AudioConfig(
@@ -213,11 +224,47 @@ def _direction_config(direction: str):
     return DIRECTION_CONFIG[direction]
 
 
+async def _translation_path(
+    transcript: str,
+    source_language: str,
+    target_language: str,
+) -> tuple[str, bytes]:
+    translated_text = await _translate_text(
+        text=transcript,
+        source_language=source_language,
+        target_language=target_language,
+    )
+    translated_audio = await _synthesize_speech(
+        text=translated_text,
+        target_language=target_language,
+    )
+    return translated_text, translated_audio
+
+
+async def _rag_path(
+    database: Database | None,
+    transcript: str,
+) -> RagOrchestrationResult:
+    if database is None:
+        return RagOrchestrationResult()
+
+    try:
+        return await asyncio.to_thread(
+            orchestrate_rag,
+            database,
+            transcript,
+        )
+    except Exception:
+        logger.exception("RAG orchestration failed unexpectedly")
+        return RagOrchestrationResult()
+
+
 async def process_audio(
     audio_bytes: bytes,
     content_type: str | None = None,
     filename: str | None = None,
     direction: str = "",
+    database: Database | None = None,
 ) -> ConversationResponse:
     """
     Run the speech-to-speech path:
@@ -232,16 +279,28 @@ async def process_audio(
         filename=filename,
         language_code=config["stt_language_code"],
     )
-
-    translated_text = await _translate_text(
-        text=transcript,
-        source_language=config["source_language"],
-        target_language=config["target_language"],
+    print(
+        f"[speech trace] transcription ({config['source_language']}): "
+        f"{transcript}",
+        flush=True,
     )
 
-    translated_audio = await _synthesize_speech(
-        text=translated_text,
-        target_language=config["target_language"],
+    translation_result, rag_result = await asyncio.gather(
+        _translation_path(
+            transcript=transcript,
+            source_language=config["source_language"],
+            target_language=config["target_language"],
+        ),
+        _rag_path(
+            database=database,
+            transcript=transcript,
+        ),
+    )
+    translated_text, translated_audio = translation_result
+    print(
+        f"[speech trace] translation ({config['target_language']}): "
+        f"{translated_text}",
+        flush=True,
     )
 
     return ConversationResponse(
@@ -250,4 +309,7 @@ async def process_audio(
         translated_text=translated_text,
         translated_audio=base64.b64encode(translated_audio).decode("ascii"),
         translated_audio_mime_type=AUDIO_MIME_TYPE,
+        intent=rag_result.intent,
+        cultural_tip=rag_result.cultural_tip,
+        source=rag_result.source,
     )

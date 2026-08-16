@@ -174,3 +174,18 @@ def test_conversation_requires_token(auth_client):
     )
 
     assert response.status_code == 401
+
+
+def test_knowledge_search_requires_token(auth_client):
+    client, _database = auth_client
+
+    response = client.post(
+        "/api/knowledge/search",
+        json={
+            "query": "Should I wear a helmet on a moto?",
+            "category": "transport",
+            "sub_category": "moto",
+        },
+    )
+
+    assert response.status_code == 401

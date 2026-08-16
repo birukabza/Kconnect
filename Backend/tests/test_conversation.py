@@ -91,6 +91,7 @@ def test_conversation(monkeypatch, authenticated_user):
         content_type=None,
         filename=None,
         direction=None,
+        database=None,
     ):
         return {
             "detected_language": "en",
@@ -98,6 +99,14 @@ def test_conversation(monkeypatch, authenticated_user):
             "translated_text": "Muraho",
             "translated_audio": "AAAA",
             "translated_audio_mime_type": "audio/mpeg",
+            "intent": {
+                "category": "transport",
+                "sub_category": "moto",
+                "situation": "helmet_use",
+                "search_query": "moto passenger helmet Rwanda",
+            },
+            "cultural_tip": "Fasten the helmet before the moto moves.",
+            "source": "Rwanda National Police",
         }
 
     monkeypatch.setattr(
@@ -129,12 +138,19 @@ def test_conversation(monkeypatch, authenticated_user):
     assert "transcript" in data
     assert "translated_text" in data
     assert data["translated_audio_mime_type"] == "audio/mpeg"
+    assert data["intent"]["situation"] == "helmet_use"
+    assert data["cultural_tip"] == (
+        "Fasten the helmet before the moto moves."
+    )
     assert ObjectId.is_valid(data["conversation_id"])
 
     stored = authenticated_user.temporary_conversations.documents[0]
     assert len(stored["turns"]) == 1
     assert stored["turns"][0]["transcript"] == "Hello"
     assert stored["turns"][0]["translated_text"] == "Muraho"
+    assert stored["turns"][0]["cultural_tip"] == (
+        "Fasten the helmet before the moto moves."
+    )
     assert "translated_audio" not in stored["turns"][0]
     assert stored["expires_at"] > stored["updated_at"]
 
@@ -148,6 +164,7 @@ def test_conversation_continues_hidden_temporary_context(
         content_type=None,
         filename=None,
         direction=None,
+        database=None,
     ):
         return {
             "detected_language": "en",
@@ -195,6 +212,7 @@ def test_temporary_context_cannot_cross_user_ownership(
         content_type=None,
         filename=None,
         direction=None,
+        database=None,
     ):
         return {
             "detected_language": "en",
@@ -353,6 +371,7 @@ def test_ai_processing_failure(monkeypatch):
         content_type=None,
         filename=None,
         direction=None,
+        database=None,
     ):
         raise Exception("Test AI failure")
 
