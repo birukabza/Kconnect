@@ -47,3 +47,18 @@ TEMPORARY_CONVERSATION_MAX_TURNS = max(
     1,
     int(os.getenv("TEMPORARY_CONVERSATION_MAX_TURNS", "20")),
 )
+
+GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "")
+GEMINI_MODEL = os.getenv("GEMINI_MODEL", "")
+GEMINI_EMBEDDING_MODEL = os.getenv(
+    "GEMINI_EMBEDDING_MODEL",
+    "gemini-embedding-2",
+)
+GEMINI_EMBEDDING_DIMENSIONS = max(
+    1,
+    int(os.getenv("GEMINI_EMBEDDING_DIMENSIONS", "768")),
+)
+GEMINI_EMBEDDING_BATCH_SIZE = max(
+    1,
+    int(os.getenv("GEMINI_EMBEDDING_BATCH_SIZE", "20")),
+)
