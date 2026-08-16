@@ -1,10 +1,9 @@
 from collections import Counter
+from types import SimpleNamespace
 
 from app.schemas.knowledge import KnowledgeItem
-from app.services.knowledge_dataset import (
-    build_retrieval_text,
-    load_knowledge_dataset,
-)
+from app.services.gemini_embeddings import GeminiEmbeddingService
+from app.services.knowledge_dataset import load_knowledge_dataset
 from app.services.knowledge_ingestion import ingest_knowledge_dataset
 from app.services.knowledge_index import (
     VECTOR_INDEX_NAME,
@@ -117,9 +116,11 @@ class FakeEmbeddingProvider:
 
     def __init__(self):
         self.embedded_document_count = 0
+        self.embedded_documents = []
 
     def embed_documents(self, texts):
         self.embedded_document_count += len(texts)
+        self.embedded_documents.extend(texts)
         return [[1.0, 0.5, 0.25] for _text in texts]
 
     def embed_query(self, _text):
@@ -131,6 +132,20 @@ class TwoDimensionalEmbeddingProvider(FakeEmbeddingProvider):
 
     def embed_query(self, _text):
         return [1.0, 0.0]
+
+
+class FakeGeminiModels:
+    def __init__(self):
+        self.contents = []
+
+    def embed_content(self, model, contents, config):
+        self.contents.append(list(contents))
+        return SimpleNamespace(
+            embeddings=[
+                SimpleNamespace(values=[1.0, 0.0])
+                for _text in contents
+            ]
+        )
 
 
 def test_current_dataset_is_valid():
@@ -145,7 +160,7 @@ def test_current_dataset_is_valid():
     }
 
 
-def test_retrieval_text_contains_context_tip_and_terms():
+def test_knowledge_record_supports_source_metadata():
     item = KnowledgeItem(
         id="transport_001",
         category="transport",
@@ -157,15 +172,28 @@ def test_retrieval_text_contains_context_tip_and_terms():
         suggested_tip=(
             "Wear and fasten the passenger helmet before the trip starts."
         ),
-        useful_terms=["Moto", " Helmet "],
+        source=" Rwanda National Police ",
     )
 
-    retrieval_text = build_retrieval_text(item)
+    assert item.source == "Rwanda National Police"
 
-    assert "Situation: helmet use" in retrieval_text
-    assert item.rwanda_context in retrieval_text
-    assert item.suggested_tip in retrieval_text
-    assert "Useful terms: moto, helmet" in retrieval_text
+
+def test_gemini_receives_exact_document_and_query_text():
+    models = FakeGeminiModels()
+    client = SimpleNamespace(models=models)
+    service = GeminiEmbeddingService(
+        client=client,
+        model="test-embedding",
+        dimensions=2,
+    )
+
+    context = "In Rwanda, moto passengers should fasten their helmets."
+    query = "moto passenger helmet requirement in Rwanda"
+
+    service.embed_documents([context])
+    service.embed_query(query)
+
+    assert models.contents == [[context], [query]]
 
 
 def test_ingestion_reuses_embeddings_for_unchanged_records():
@@ -192,7 +220,13 @@ def test_ingestion_reuses_embeddings_for_unchanged_records():
     assert second_report.embedded_records == 0
     assert second_report.reused_embeddings == 116
     assert provider.embedded_document_count == 116
+    assert provider.embedded_documents == [
+        item.rwanda_context for item in load_knowledge_dataset()
+    ]
     assert len(database.knowledge.documents) == 116
+    assert "retrieval_text" not in (
+        database.knowledge.documents["transport_001"]
+    )
     assert "obsolete_field" not in (
         database.knowledge.documents["transport_001"]
     )
@@ -211,6 +245,7 @@ def test_search_returns_results_in_similarity_order():
         "situation": "helmet_use",
         "rwanda_context": "Rwanda-specific context for the test result.",
         "suggested_tip": "Fasten the helmet before the trip starts.",
+        "source": "Rwanda National Police",
     }
 
     for item_id, score in {
@@ -229,6 +264,9 @@ def test_search_returns_results_in_similarity_order():
     results = search_knowledge(
         database,
         query="Should I wear a helmet on a moto?",
+        category="transport",
+        sub_category="moto",
+        situation="helmet_use",
         top_k=3,
         embedding_provider=provider,
     )
@@ -243,8 +281,15 @@ def test_search_returns_results_in_similarity_order():
         query_embedding=[1.0, 0.0],
         model=provider.model,
         dimensions=provider.dimensions,
+        category="transport",
+        sub_category="moto",
+        situation="helmet_use",
         top_k=3,
     )
     vector_stage = database.knowledge.last_pipeline[0]["$vectorSearch"]
     assert vector_stage["index"] == VECTOR_INDEX_NAME
     assert vector_stage["numCandidates"] == 100
+    assert {"category": {"$eq": "transport"}} in (
+        vector_stage["filter"]["$and"]
+    )
+    assert results[0].source == "Rwanda National Police"

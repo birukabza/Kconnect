@@ -63,21 +63,37 @@ Run these commands from `Backend`:
 python -m app.scripts.validate_knowledge
 python -m app.scripts.ingest_knowledge
 python -m app.scripts.setup_vector_index --wait
-python -m app.scripts.search_knowledge "Should I wear a helmet on a moto?"
+python -m app.scripts.search_knowledge `
+  "moto passenger helmet requirement in Rwanda" `
+  --category transport `
+  --sub-category moto `
+  --situation helmet_use
 ```
 
-Ingestion validates `data.json`, embeds new or changed records, and idempotently
-upserts them into MongoDB. It also creates or updates the 768-dimension cosine
-vector index. The explicit setup command waits until Atlas reports that the
-index is queryable. Authenticated clients search it through MongoDB's native
-`$vectorSearch` stage with `POST /api/knowledge/search` and a body such as:
+Ingestion validates `data.json` and embeds exactly one field from each record:
+`rwanda_context`. Category, subcategory, situation, suggested tip, and source
+remain metadata. Changed context records are re-embedded; unchanged embeddings
+are reused. Ingestion also creates or updates the 768-dimension cosine vector
+index. The explicit setup command waits until Atlas reports that the index is
+queryable.
+
+Authenticated clients search through MongoDB's native `$vectorSearch` stage.
+Category and subcategory are required metadata filters; situation is optional.
+Call `POST /api/knowledge/search` with a body such as:
 
 ```json
 {
-  "query": "Should I wear a helmet on a moto?",
+  "query": "moto passenger helmet requirement in Rwanda",
+  "category": "transport",
+  "sub_category": "moto",
+  "situation": "helmet_use",
   "top_k": 3
 }
 ```
+
+The next orchestration layer will derive the filters and short search query
+from the conversation, retrieve complete records, and pass their context, tip,
+and source to the generation model.
 
 ## Frontend setup
 

@@ -11,7 +11,6 @@ from app.services.gemini_embeddings import (
 )
 from app.services.knowledge_dataset import (
     DEFAULT_DATASET_PATH,
-    build_retrieval_text,
     load_knowledge_dataset,
 )
 from app.services.knowledge_index import (
@@ -64,11 +63,11 @@ def ingest_knowledge_dataset(
     reused_embeddings = 0
 
     for item in items:
-        retrieval_text = build_retrieval_text(item)
+        embedding_text = item.rwanda_context
         content_hash = sha256(
-            retrieval_text.encode("utf-8")
+            embedding_text.encode("utf-8")
         ).hexdigest()
-        prepared.append((item, retrieval_text, content_hash))
+        prepared.append((item, embedding_text, content_hash))
 
         existing_document = existing.get(item.id)
 
@@ -84,7 +83,7 @@ def ingest_knowledge_dataset(
             embeddings_by_id[item.id] = existing_document["embedding"]
             reused_embeddings += 1
         else:
-            pending.append((item.id, retrieval_text))
+            pending.append((item.id, embedding_text))
 
     if pending:
         new_embeddings = provider.embed_documents(
@@ -103,7 +102,7 @@ def ingest_knowledge_dataset(
 
     ingested_at = datetime.now(timezone.utc)
 
-    for item, retrieval_text, content_hash in prepared:
+    for item, _embedding_text, content_hash in prepared:
         document = {
             "_id": item.id,
             **item.model_dump(),
@@ -111,7 +110,6 @@ def ingest_knowledge_dataset(
         document.update(
             {
                 "id": item.id,
-                "retrieval_text": retrieval_text,
                 "content_hash": content_hash,
                 "embedding": embeddings_by_id[item.id],
                 "embedding_model": provider.model,

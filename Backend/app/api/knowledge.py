@@ -32,9 +32,12 @@ async def search(
     try:
         results = await run_in_threadpool(
             search_knowledge,
-            database,
-            request.query,
-            request.top_k,
+            database=database,
+            query=request.query,
+            category=request.category,
+            sub_category=request.sub_category,
+            situation=request.situation,
+            top_k=request.top_k,
         )
     except KnowledgeIndexEmptyError as error:
         raise HTTPException(

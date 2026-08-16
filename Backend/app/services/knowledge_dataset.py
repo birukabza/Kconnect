@@ -64,19 +64,3 @@ def load_knowledge_dataset(
         raise DatasetValidationError("\n".join(errors))
 
     return items
-
-
-def build_retrieval_text(item: KnowledgeItem) -> str:
-    fields = [
-        f"Category: {item.category.replace('_', ' ')}",
-        f"Subcategory: {item.sub_category.replace('_', ' ')}",
-        f"Situation: {item.situation.replace('_', ' ')}",
-        f"Location scope: {item.scope.replace('_', ' ')}",
-        f"Rwanda context: {item.rwanda_context}",
-        f"Suggested tip: {item.suggested_tip}",
-    ]
-
-    if item.useful_terms:
-        fields.append("Useful terms: " + ", ".join(item.useful_terms))
-
-    return "\n".join(fields)

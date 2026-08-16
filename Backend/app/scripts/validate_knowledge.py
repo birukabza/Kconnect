@@ -27,6 +27,9 @@ def main() -> None:
     for category, count in sorted(categories.items()):
         print(f"{category}: {count}")
 
+    missing_sources = sum(item.source is None for item in items)
+    print(f"Records missing source: {missing_sources}")
+
 
 if __name__ == "__main__":
     main()

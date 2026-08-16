@@ -19,8 +19,22 @@ def build_vector_search_pipeline(
     query_embedding: list[float],
     model: str,
     dimensions: int,
+    category: str,
+    sub_category: str,
+    situation: str | None,
     top_k: int,
 ) -> list[dict]:
+    filters = [
+        {"active": {"$eq": True}},
+        {"embedding_model": {"$eq": model}},
+        {"embedding_dimensions": {"$eq": dimensions}},
+        {"category": {"$eq": category}},
+        {"sub_category": {"$eq": sub_category}},
+    ]
+
+    if situation:
+        filters.append({"situation": {"$eq": situation}})
+
     return [
         {
             "$vectorSearch": {
@@ -30,15 +44,7 @@ def build_vector_search_pipeline(
                 "numCandidates": max(100, top_k * 20),
                 "limit": top_k,
                 "filter": {
-                    "$and": [
-                        {"active": {"$eq": True}},
-                        {"embedding_model": {"$eq": model}},
-                        {
-                            "embedding_dimensions": {
-                                "$eq": dimensions
-                            }
-                        },
-                    ]
+                    "$and": filters
                 },
             }
         },
@@ -51,6 +57,7 @@ def build_vector_search_pipeline(
                 "situation": 1,
                 "rwanda_context": 1,
                 "suggested_tip": 1,
+                "source": 1,
                 "score": {"$meta": "vectorSearchScore"},
             }
         },
@@ -60,6 +67,9 @@ def build_vector_search_pipeline(
 def search_knowledge(
     database: Database,
     query: str,
+    category: str,
+    sub_category: str,
+    situation: str | None = None,
     top_k: int = 3,
     embedding_provider: EmbeddingProvider | None = None,
 ) -> list[KnowledgeSearchResult]:
@@ -71,6 +81,9 @@ def search_knowledge(
                 query_embedding=query_embedding,
                 model=provider.model,
                 dimensions=provider.dimensions,
+                category=category,
+                sub_category=sub_category,
+                situation=situation,
                 top_k=top_k,
             )
         )
@@ -89,6 +102,7 @@ def search_knowledge(
             situation=document["situation"],
             rwanda_context=document["rwanda_context"],
             suggested_tip=document["suggested_tip"],
+            source=document.get("source"),
             score=document["score"],
         )
         for document in documents

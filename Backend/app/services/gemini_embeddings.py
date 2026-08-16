@@ -48,16 +48,10 @@ class GeminiEmbeddingService:
         self.batch_size = batch_size
 
     def embed_documents(self, texts: list[str]) -> list[list[float]]:
-        prepared = [
-            "Task: document retrieval\nDocument:\n" + text
-            for text in texts
-        ]
-        return self._embed_in_batches(prepared)
+        return self._embed_in_batches(texts)
 
     def embed_query(self, text: str) -> list[float]:
-        [embedding] = self._embed_in_batches(
-            ["Task: document retrieval\nQuery:\n" + text]
-        )
+        [embedding] = self._embed_in_batches([text])
         return embedding
 
     def _embed_in_batches(

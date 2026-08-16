@@ -16,6 +16,7 @@ class VectorIndexStatus:
     name: str
     status: str
     queryable: bool
+    definition_ready: bool
     created: bool = False
     updated: bool = False
 
@@ -34,12 +35,16 @@ def build_vector_index_definition(
             {"type": "filter", "path": "active"},
             {"type": "filter", "path": "embedding_model"},
             {"type": "filter", "path": "embedding_dimensions"},
+            {"type": "filter", "path": "category"},
+            {"type": "filter", "path": "sub_category"},
+            {"type": "filter", "path": "situation"},
         ]
     }
 
 
 def get_vector_index_status(
     database: Database,
+    dimensions: int = GEMINI_EMBEDDING_DIMENSIONS,
 ) -> VectorIndexStatus | None:
     collection = database[COLLECTION_NAME]
 
@@ -49,6 +54,11 @@ def get_vector_index_status(
                 name=VECTOR_INDEX_NAME,
                 status=index.get("status", "UNKNOWN"),
                 queryable=bool(index.get("queryable", False)),
+                definition_ready=_definition_matches(
+                    index.get("latestDefinition")
+                    or index.get("definition"),
+                    build_vector_index_definition(dimensions),
+                ),
             )
 
     return None
@@ -101,6 +111,7 @@ def ensure_vector_index(
             name=VECTOR_INDEX_NAME,
             status="CREATING",
             queryable=False,
+            definition_ready=True,
             created=True,
         )
 
@@ -123,21 +134,28 @@ def ensure_vector_index(
         name=VECTOR_INDEX_NAME,
         status=existing.get("status", "UNKNOWN"),
         queryable=bool(existing.get("queryable", False)),
+        definition_ready=not needs_update,
         updated=needs_update,
     )
 
 
 def wait_for_vector_index(
     database: Database,
+    dimensions: int = GEMINI_EMBEDDING_DIMENSIONS,
     timeout_seconds: int = 300,
     poll_seconds: int = 2,
 ) -> VectorIndexStatus:
     deadline = monotonic() + timeout_seconds
 
     while monotonic() < deadline:
-        status = get_vector_index_status(database)
+        status = get_vector_index_status(database, dimensions)
 
-        if status and status.queryable:
+        if (
+            status
+            and status.queryable
+            and status.definition_ready
+            and status.status.upper() == "READY"
+        ):
             return status
 
         if status and status.status.upper() in {"FAILED", "DELETING"}:
