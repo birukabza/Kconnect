@@ -7,6 +7,7 @@ import { Mic, RotateCcw, Square, Volume2 } from "lucide-react";
 import { AudioRecorder, MicPermissionError } from "@/lib/audioRecorder";
 import { useConversationStore } from "@/lib/conversationStore";
 import {
+  prepareBackendAudioPlayback,
   stopBackendAudioPlayback,
   useConversePipeline,
 } from "@/lib/useConversePipeline";
@@ -76,6 +77,8 @@ export function MicButton() {
 
   const handleClick = useCallback(async () => {
     if (status === "processing") return;
+
+    prepareBackendAudioPlayback();
 
     if (status === "speaking") {
       stopBackendAudioPlayback();

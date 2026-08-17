@@ -34,22 +34,112 @@ const API_URL =
   "http://127.0.0.1:8000";
 
 let stopActiveBackendAudio: (() => void) | null = null;
+let backendAudioContext: AudioContext | null = null;
+
+type SafariWindow = Window &
+  typeof globalThis & {
+    webkitAudioContext?: typeof AudioContext;
+  };
+
+function getBackendAudioContext(): AudioContext | null {
+  if (typeof window === "undefined") return null;
+
+  const AudioContextConstructor =
+    window.AudioContext ??
+    (window as SafariWindow).webkitAudioContext;
+
+  if (!AudioContextConstructor) return null;
+
+  if (backendAudioContext?.state === "closed") {
+    backendAudioContext = null;
+  }
+
+  backendAudioContext ??= new AudioContextConstructor();
+  return backendAudioContext;
+}
+
+export function prepareBackendAudioPlayback(): void {
+  const context = getBackendAudioContext();
+
+  if (!context) return;
+
+  if (context.state !== "running") {
+    void context.resume().catch(() => undefined);
+  }
+
+  // Scheduling silence during the tap unlocks later playback on iOS browsers.
+  const source = context.createBufferSource();
+  source.buffer = context.createBuffer(1, 1, context.sampleRate);
+  source.connect(context.destination);
+  source.onended = () => source.disconnect();
+  source.start();
+}
 
 export function stopBackendAudioPlayback() {
   stopActiveBackendAudio?.();
   stopActiveBackendAudio = null;
 }
 
-async function playBackendAudio(
-  audioBase64: string,
-  mimeType = "audio/mpeg"
-): Promise<void> {
-  if (typeof Audio === "undefined") {
-    throw new Error("Audio playback is not supported in this browser.");
+function decodeBase64Audio(audioBase64: string): ArrayBuffer {
+  const binary = window.atob(audioBase64);
+  const bytes = new Uint8Array(binary.length);
+
+  for (let index = 0; index < binary.length; index += 1) {
+    bytes[index] = binary.charCodeAt(index);
   }
 
-  stopBackendAudioPlayback();
+  return bytes.buffer;
+}
 
+async function playWithWebAudio(audioBase64: string): Promise<void> {
+  const context = getBackendAudioContext();
+
+  if (!context) {
+    throw new Error("Web Audio playback is not supported in this browser.");
+  }
+
+  if (context.state !== "running") {
+    await context.resume();
+  }
+
+  const buffer = await context.decodeAudioData(
+    decodeBase64Audio(audioBase64)
+  );
+  const source = context.createBufferSource();
+  source.buffer = buffer;
+  source.connect(context.destination);
+
+  await new Promise<void>((resolve) => {
+    let settled = false;
+
+    const settle = () => {
+      if (settled) return;
+
+      settled = true;
+      stopActiveBackendAudio = null;
+      source.disconnect();
+      resolve();
+    };
+
+    stopActiveBackendAudio = () => {
+      try {
+        source.stop();
+      } catch {
+        // The source may already have finished.
+      }
+
+      settle();
+    };
+
+    source.onended = settle;
+    source.start();
+  });
+}
+
+async function playWithHtmlAudio(
+  audioBase64: string,
+  mimeType: string
+): Promise<void> {
   const audio = new Audio(
     `data:${mimeType};base64,${audioBase64}`
   );
@@ -81,12 +171,31 @@ async function playBackendAudio(
       settle(new Error("Synthesized audio playback failed."));
   });
 
+  await audio.play();
+  await finished;
+}
+
+async function playBackendAudio(
+  audioBase64: string,
+  mimeType = "audio/mpeg"
+): Promise<void> {
+  if (typeof Audio === "undefined") {
+    throw new Error("Audio playback is not supported in this browser.");
+  }
+
+  stopBackendAudioPlayback();
+
   try {
-    await audio.play();
-    await finished;
+    await playWithWebAudio(audioBase64);
   } catch (error) {
     stopBackendAudioPlayback();
-    throw error;
+
+    try {
+      await playWithHtmlAudio(audioBase64, mimeType);
+    } catch {
+      stopBackendAudioPlayback();
+      throw error;
+    }
   }
 }
 
